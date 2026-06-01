@@ -55,24 +55,24 @@ export function ConfirmationModal({
             className="fixed inset-0 bg-charcoal/40 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
             <div onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden"
+              className="bg-white dark:bg-dark-bg border border-transparent dark:border-dark-border rounded-xl shadow-2xl w-full max-w-md overflow-hidden"
             >
               <div className="p-6 md:p-8">
                 <div className="flex justify-between items-start mb-4">
-                  <div className={`p-3 rounded-full ${type === 'danger' ? 'bg-red-100' : type === 'success' ? 'bg-emerald-100' : 'bg-blue-100'}`}>
+                  <div className={`p-3 rounded-full ${type === 'danger' ? 'bg-red-100 dark:bg-red-500/20' : type === 'success' ? 'bg-emerald-100 dark:bg-emerald-500/20' : 'bg-blue-100 dark:bg-blue-500/20'}`}>
                     {getIcon()}
                   </div>
                   <button 
                     onClick={onClose} 
                     disabled={isLoading}
-                    className="text-charcoal/40 hover:text-charcoal transition-colors disabled:opacity-50"
+                    className="text-charcoal/40 dark:text-dark-muted hover:text-charcoal dark:hover:text-dark-text transition-colors disabled:opacity-50"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
                 
-                <h3 className="text-xl font-serif text-charcoal mb-2">{title}</h3>
-                <p className="text-charcoal/70 text-sm leading-relaxed mb-8">{message}</p>
+                <h3 className="text-xl font-serif text-charcoal dark:text-dark-text mb-2">{title}</h3>
+                <p className="text-charcoal/70 dark:text-dark-muted text-sm leading-relaxed mb-8">{message}</p>
                 
                 <div className="flex items-center justify-end gap-3">
                   <Button 
