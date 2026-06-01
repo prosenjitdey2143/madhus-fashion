@@ -193,7 +193,7 @@ export function AdminOrderDetails() {
           >
             <ArrowLeft className="w-4 h-4 mr-1" /> Back to Orders
           </button>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
             <h1 className="text-3xl font-serif text-charcoal dark:text-dark-text font-medium">{order.orderId}</h1>
             <StatusBadge status={order.orderStatus} />
           </div>
@@ -203,7 +203,7 @@ export function AdminOrderDetails() {
         </div>
 
         {/* Quick Actions */}
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
           {order.paymentStatus !== "verified" && (
             <Button size="sm" onClick={() => setVerifyModalOpen(true)} disabled={actionLoading} className="bg-emerald-600 hover:bg-emerald-700 border-none text-white shadow-soft-hover">
               <CheckCircle className="w-4 h-4 mr-2" /> Verify Payment

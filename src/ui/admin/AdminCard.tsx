@@ -11,7 +11,7 @@ export function AdminCard({ children, className, noPadding = false }: AdminCardP
   return (
     <div className={cn(
       "bg-white dark:bg-dark-surface border border-charcoal/5 dark:border-dark-border rounded-xl shadow-soft dark:shadow-none transition-colors",
-      !noPadding && "p-6",
+      !noPadding && "p-4 sm:p-6",
       className
     )}>
       {children}

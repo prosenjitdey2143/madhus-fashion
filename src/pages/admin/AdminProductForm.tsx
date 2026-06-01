@@ -371,7 +371,7 @@ export function AdminProductForm() {
           <AdminCard className="space-y-6">
             <h2 className="text-xl font-serif text-charcoal dark:text-dark-text mb-4">Pricing</h2>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-charcoal/80 dark:text-dark-text">Price *</label>
                 <div className="relative">

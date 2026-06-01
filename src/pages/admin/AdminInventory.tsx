@@ -169,7 +169,7 @@ export function AdminInventory() {
                             title="Click to quick edit"
                           >
                             <span>{product.stock}</span>
-                            <span className="opacity-0 group-hover:opacity-100 text-[10px] text-charcoal/40 dark:text-dark-muted uppercase tracking-wide">Edit</span>
+                            <span className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 text-[10px] text-charcoal/40 dark:text-dark-muted uppercase tracking-wide">Edit</span>
                           </div>
                         )}
                       </div>

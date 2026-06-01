@@ -100,7 +100,7 @@ function AdminLayoutContent() {
             <div onClick={() => setMobileMenuOpen(false)}
               className="fixed inset-0 bg-charcoal/20 backdrop-blur-sm z-40 lg:hidden"
             />
-            <aside className="fixed inset-y-0 left-0 w-[280px] bg-white shadow-2xl z-50 flex flex-col lg:hidden"
+            <aside className="fixed inset-y-0 left-0 w-[280px] bg-white dark:bg-dark-surface shadow-2xl z-50 flex flex-col lg:hidden"
             >
               <SidebarContent />
             </aside>
@@ -116,7 +116,7 @@ function AdminLayoutContent() {
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setMobileMenuOpen(true)}
-              className="p-2 -ml-2 rounded-lg hover:bg-secondary/20 transition-colors lg:hidden text-charcoal/70"
+              className="p-2 -ml-2 rounded-lg hover:bg-secondary/20 dark:hover:bg-dark-surfaceHover transition-colors lg:hidden text-charcoal/70 dark:text-dark-text"
             >
               <Menu className="w-6 h-6" />
             </button>
@@ -152,7 +152,7 @@ function AdminLayoutContent() {
         </header>
 
         {/* Scrollable Page Content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 lg:p-8">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8">
           <div
             key={location.pathname} className="w-full h-full"
           >
