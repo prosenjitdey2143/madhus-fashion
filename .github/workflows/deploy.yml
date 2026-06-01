@@ -45,7 +45,6 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: "989199848064"
           VITE_FIREBASE_APP_ID: "1:989199848064:web:c59b86ce7fb28b28e80c65"
           VITE_ADMIN_EMAIL: "prosenjitdey2143@gmail.com"
-          VITE_IMAGE_PROXY_URL: "https://ik.imagekit.io/mt5rdn7o3/"
       - name: Setup Pages
         uses: actions/configure-pages@v4
         with:
