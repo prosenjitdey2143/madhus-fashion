@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { cn } from "../utils/utils"
 import { ShoppingBag, Heart } from "lucide-react"
 import { useWishlist } from "../context/WishlistContext"
+import { ResponsiveImage } from "./ResponsiveImage"
 
 export interface ProductCardProps {
   id: string;
@@ -67,11 +68,9 @@ export function ProductCard({
         {/* Edge-to-Edge Image */}
         <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
           {imageUrl ? (
-            <img 
+            <ResponsiveImage 
               src={imageUrl} 
               alt={name}
-              loading="lazy"
-              decoding="async"
               className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-[1200ms] ease-[0.25,1,0.5,1]"
             />
           ) : (

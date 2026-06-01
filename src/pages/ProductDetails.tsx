@@ -10,6 +10,9 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useParams } from "react-router-dom"
 import { useProduct } from "../hooks/useProducts"
 import { ImageMagnifier } from "../ui/ImageMagnifier"
+import { useRecentlyViewed } from "../hooks/useRecentlyViewed"
+import { RecentlyViewed } from "../components/products/RecentlyViewed"
+import { ResponsiveImage } from "../ui/ResponsiveImage"
 
 export function ProductDetails() {
   const { id } = useParams()
@@ -17,6 +20,7 @@ export function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const { addItem, setCartOpen } = useCart()
   const { toast } = useToast()
+  const { addRecentlyViewed } = useRecentlyViewed()
 
   // Accordion state
   const [openAccordion, setOpenAccordion] = useState<string | null>(null)
@@ -58,8 +62,17 @@ export function ProductDetails() {
   useEffect(() => {
     if (product && !loading && !error) {
       analyticsService.productView(product);
+
+      addRecentlyViewed({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        originalPrice: product.originalPrice,
+        imageUrl: product.images[0],
+        badge: product.stock === 0 ? "OUT OF STOCK" : product.discount ? "SALE" : product.newArrival ? "NEW" : product.bestSeller ? "BESTSELLER" : undefined
+      });
     }
-  }, [product, loading, error]);
+  }, [product, loading, error, addRecentlyViewed]);
 
   const handleAddToCart = () => {
     if (!product) return;
@@ -183,7 +196,7 @@ export function ProductDetails() {
             <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide w-full h-[75vh]">
               {product.images.map((img, idx) => (
                 <div key={idx} className="w-full shrink-0 snap-center h-full relative">
-                  <img src={img} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
+                  <ResponsiveImage src={img} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
@@ -216,7 +229,7 @@ export function ProductDetails() {
                         : "border-transparent opacity-50 hover:opacity-100"
                     )}
                   >
-                    <img src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                    <ResponsiveImage src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -422,6 +435,8 @@ export function ProductDetails() {
           </div>
         )}
       </AnimatePresence>
+
+      {product && <RecentlyViewed currentProductId={product.id} />}
     </div>
   )
 }

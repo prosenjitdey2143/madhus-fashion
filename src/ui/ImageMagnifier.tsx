@@ -1,4 +1,5 @@
 import { useState, type MouseEvent, useRef } from 'react';
+import { getOptimizedImageUrl } from '../utils/imageOptimization';
 import { cn } from '../utils/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -14,6 +15,8 @@ export function ImageMagnifier({ src, alt, className, zoomLevel = 2.5 }: ImageMa
   // Position is stored as percentages (0-100)
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const optimizedSrc = getOptimizedImageUrl(src, 1600);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
@@ -37,16 +40,16 @@ export function ImageMagnifier({ src, alt, className, zoomLevel = 2.5 }: ImageMa
   return (
     <div 
       ref={containerRef}
-      className={cn("relative cursor-crosshair w-full h-full bg-brand-pale", className)}
+      className={cn("relative w-full h-full cursor-zoom-in group bg-brand-pale overflow-hidden", className)}
       onMouseEnter={() => setShowMagnifier(true)}
       onMouseLeave={() => setShowMagnifier(false)}
       onMouseMove={handleMouseMove}
     >
       {/* Original Image */}
       <img
-        src={src}
+        src={getOptimizedImageUrl(src, 800)}
         alt={alt}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0"
       />
 
       {/* The Lens (Shadow box over the image) */}
@@ -79,7 +82,7 @@ export function ImageMagnifier({ src, alt, className, zoomLevel = 2.5 }: ImageMa
               marginLeft: "3rem", // gap
               width: "450px", // Fixed large size for the zoom result
               height: "600px",
-              backgroundImage: `url(${src})`,
+              backgroundImage: `url(${optimizedSrc})`,
               backgroundRepeat: "no-repeat",
               // The background size is zoomLevel * 100% of the container size
               backgroundSize: `${zoomLevel * 100}%`,

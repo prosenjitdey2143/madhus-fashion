@@ -10,6 +10,7 @@ import { OffersSection } from "../components/home/OffersSection"
 import { TrustSection } from "../components/home/TrustSection"
 import { VideoGallery } from "../components/home/VideoGallery"
 import { SocialProof } from "../components/home/SocialProof"
+import { RecentlyViewed } from "../components/products/RecentlyViewed"
 
 export function Home() {
   return (
@@ -24,6 +25,7 @@ export function Home() {
         <TrustSection />
         <OffersSection />
         <ShopByCategory />
+        <RecentlyViewed />
         <BestSellers />
         <CollectionsSection />
         <NewArrivals />
