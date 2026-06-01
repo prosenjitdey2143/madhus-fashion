@@ -410,10 +410,11 @@ export function Checkout() {
           <span className="text-brand-text font-medium">Checkout</span>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+        <h1 className="text-3xl lg:text-4xl font-serif text-brand-text mb-6 md:mb-12">Checkout</h1>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-24">
           {/* Left Column: Form */}
-          <div className="lg:col-span-7 xl:col-span-8">
-            <h1 className="text-3xl lg:text-4xl font-serif text-brand-text mb-3 md:mb-12">Checkout</h1>
+          <div className="lg:col-span-7 xl:col-span-8 order-2 lg:order-1">
             
             <form onSubmit={handleCheckout} className="space-y-16">
               
@@ -550,8 +551,8 @@ export function Checkout() {
           </div>
 
           {/* Right Column: Order Summary */}
-          <div className="lg:col-span-5 xl:col-span-4">
-            <div className="bg-brand-pale p-8 lg:p-10 sticky top-[140px]">
+          <div className="lg:col-span-5 xl:col-span-4 order-1 lg:order-2">
+            <div className="bg-brand-pale p-6 lg:p-10 sticky top-[140px]">
               <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium text-brand-text mb-4 pb-4 border-b border-brand-text/10 flex justify-between items-center">
                 <span>In Your Bag</span>
                 <span className="text-brand-text/60">{items.length} {items.length === 1 ? 'Item' : 'Items'}</span>
