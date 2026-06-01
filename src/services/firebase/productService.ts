@@ -2,7 +2,6 @@ import { collection, doc, getDoc, query, where, limit, getDocs, addDoc, updateDo
 import { db } from "./firebaseConfig";
 import { storageService } from "./storageService";
 import type { Product } from "../../types";
-import { MOCK_PRODUCTS } from "./mockData";
 
 const PRODUCTS_COLLECTION = "products";
 
@@ -12,10 +11,6 @@ export const productService = {
    */
   getProducts: async (): Promise<Product[]> => {
     try {
-      if (import.meta.env.VITE_FIREBASE_API_KEY === undefined || import.meta.env.VITE_FIREBASE_API_KEY === "" || import.meta.env.VITE_FIREBASE_API_KEY === "mock-key") {
-        return MOCK_PRODUCTS;
-      }
-      
       const q = query(collection(db, PRODUCTS_COLLECTION));
       const querySnapshot = await getDocs(q);
       
@@ -34,10 +29,6 @@ export const productService = {
    */
   getProductById: async (id: string): Promise<Product | null> => {
     try {
-      if (import.meta.env.VITE_FIREBASE_API_KEY === undefined || import.meta.env.VITE_FIREBASE_API_KEY === "" || import.meta.env.VITE_FIREBASE_API_KEY === "mock-key") {
-        return MOCK_PRODUCTS.find(p => p.id === id) || null;
-      }
-
       const docRef = doc(db, PRODUCTS_COLLECTION, id);
       const docSnap = await getDoc(docRef);
 
@@ -56,10 +47,6 @@ export const productService = {
    */
   getFeaturedProducts: async (count: number = 4): Promise<Product[]> => {
     try {
-      if (import.meta.env.VITE_FIREBASE_API_KEY === undefined || import.meta.env.VITE_FIREBASE_API_KEY === "" || import.meta.env.VITE_FIREBASE_API_KEY === "mock-key") {
-        return MOCK_PRODUCTS.slice(0, count);
-      }
-
       const q = query(
         collection(db, PRODUCTS_COLLECTION),
         where("featured", "==", true),
@@ -131,104 +118,6 @@ export const productService = {
     } catch (error) {
       console.error(`Failed to delete product ${id}:`, error);
       throw error;
-    }
-  },
-
-  /**
-   * Seed the database with mock products if it's empty
-   * (Utility for initial setup)
-   */
-  seedMockProducts: async (): Promise<void> => {
-    try {
-      const q = query(collection(db, PRODUCTS_COLLECTION), limit(1));
-      const snapshot = await getDocs(q);
-      
-      if (!snapshot.empty) {
-        return; // Already seeded
-      }
-
-      console.log("Seeding mock products...");
-      const mockProducts: Omit<Product, "id">[] = [
-        {
-          name: "Midnight Silk Slip Dress",
-          price: 290,
-          description: "Crafted from 100% pure mulberry silk, this slip dress falls effortlessly over the body.",
-          category: "Dresses",
-          sizes: ['XS', 'S', 'M', 'L'],
-          stock: 15,
-          images: ["https://images.unsplash.com/photo-1566206091558-f62f3a8f5e6a?q=80&w=987&auto=format&fit=crop"],
-          featured: true,
-          newArrival: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          name: "Ivory Draped Maxi",
-          price: 450,
-          description: "An elegant draped maxi perfect for modern evening elegance.",
-          category: "Dresses",
-          sizes: ['S', 'M', 'L'],
-          stock: 8,
-          images: ["https://images.unsplash.com/photo-1515347619362-e610d05770d1?q=80&w=987&auto=format&fit=crop"],
-          featured: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          name: "Charcoal Structured Midi",
-          price: 320,
-          originalPrice: 380,
-          description: "Structured midi dress in premium charcoal fabric.",
-          category: "Dresses",
-          sizes: ['XS', 'S', 'M'],
-          stock: 5,
-          images: ["https://images.unsplash.com/photo-1550639525-c97d455acf70?q=80&w=1026&auto=format&fit=crop"],
-          bestSeller: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          name: "Rose Nude Halter Gown",
-          price: 520,
-          description: "A breathtaking halter gown in a soft rose nude shade.",
-          category: "Gowns",
-          sizes: ['S', 'M'],
-          stock: 2,
-          images: ["https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=987&auto=format&fit=crop"],
-          bestSeller: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          name: "Emerald Evening Wrap",
-          price: 210,
-          description: "Luxurious emerald wrap for elegant layering.",
-          category: "Outerwear",
-          sizes: ['One Size'],
-          stock: 20,
-          images: ["https://images.unsplash.com/photo-1572804013309-82a891485c8e?q=80&w=1000&auto=format&fit=crop"],
-          newArrival: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        },
-        {
-          name: "Champagne Velvet Mini",
-          price: 275,
-          description: "A chic velvet mini dress in glowing champagne.",
-          category: "Dresses",
-          sizes: ['XS', 'L'],
-          stock: 0,
-          images: ["https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1083&auto=format&fit=crop"],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ];
-
-      const batch = mockProducts.map(p => addDoc(collection(db, PRODUCTS_COLLECTION), p));
-      await Promise.all(batch);
-      console.log("Seeding complete.");
-    } catch (error) {
-      console.error("Failed to seed database (likely permissions or mock config):", error);
     }
   }
 };

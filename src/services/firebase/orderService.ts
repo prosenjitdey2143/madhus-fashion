@@ -1,7 +1,6 @@
 import { collection, serverTimestamp, doc, getDoc, query, where, getDocs, updateDoc, setDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import type { Order } from "../../types";
-import { MOCK_ORDERS } from "./mockData";
 
 const ORDERS_COLLECTION = "orders";
 
@@ -47,10 +46,6 @@ export const orderService = {
    */
   getOrderById: async (orderId: string): Promise<Order | null> => {
     try {
-      if (import.meta.env.VITE_FIREBASE_API_KEY === undefined || import.meta.env.VITE_FIREBASE_API_KEY === "" || import.meta.env.VITE_FIREBASE_API_KEY === "mock-key") {
-        return MOCK_ORDERS.find(o => o.orderId === orderId) || null;
-      }
-
       const docRef = doc(db, ORDERS_COLLECTION, orderId);
       const docSnap = await getDoc(docRef);
 
@@ -69,10 +64,6 @@ export const orderService = {
    */
   getAllOrders: async (): Promise<Order[]> => {
     try {
-      if (import.meta.env.VITE_FIREBASE_API_KEY === undefined || import.meta.env.VITE_FIREBASE_API_KEY === "" || import.meta.env.VITE_FIREBASE_API_KEY === "mock-key") {
-        return MOCK_ORDERS.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      }
-
       const querySnapshot = await getDocs(collection(db, ORDERS_COLLECTION));
       const orders = querySnapshot.docs.map((doc: any) => ({
         orderId: doc.id,
@@ -97,10 +88,6 @@ export const orderService = {
    */
   getUserOrders: async (email: string): Promise<Order[]> => {
     try {
-      if (import.meta.env.VITE_FIREBASE_API_KEY === undefined || import.meta.env.VITE_FIREBASE_API_KEY === "" || import.meta.env.VITE_FIREBASE_API_KEY === "mock-key") {
-        return MOCK_ORDERS.filter(o => o.customerInfo.email === email);
-      }
-
       const q = query(
         collection(db, ORDERS_COLLECTION),
         where("customerInfo.email", "==", email)

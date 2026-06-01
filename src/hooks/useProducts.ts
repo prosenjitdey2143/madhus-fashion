@@ -11,9 +11,6 @@ export function useProducts() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        // Attempt to seed if empty (utility for dev)
-        await productService.seedMockProducts();
-        
         const data = await productService.getProducts();
         setProducts(data);
       } catch (err) {
