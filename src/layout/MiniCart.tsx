@@ -97,7 +97,7 @@ export function MiniCart() {
                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
                               >+</button>
                             </div>
-                            <p className="text-sm font-medium text-charcoal">${(item.price * item.quantity).toFixed(2)}</p>
+                            <p className="text-sm font-medium text-charcoal">₹{(item.price * item.quantity).toFixed(2)}</p>
                           </div>
                         </div>
                       </div>
@@ -112,7 +112,7 @@ export function MiniCart() {
               <div className="p-6 border-t border-charcoal/10 bg-white flex-shrink-0 space-y-4 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
                 <div className="flex justify-between items-center text-charcoal">
                   <span className="font-medium">Subtotal</span>
-                  <span className="font-serif text-lg">${totalPrice.toFixed(2)}</span>
+                  <span className="font-serif text-lg">₹{totalPrice.toFixed(2)}</span>
                 </div>
                 <div className="space-y-2">
                   <Button className="w-full" onClick={handleCheckout}>Checkout</Button>

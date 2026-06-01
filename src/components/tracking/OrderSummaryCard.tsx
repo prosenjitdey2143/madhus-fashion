@@ -68,7 +68,7 @@ export function OrderSummaryCard({ order }: OrderSummaryCardProps) {
               <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <h4 className="font-medium text-charcoal text-sm truncate">{item.name}</h4>
                 <p className="text-xs text-charcoal/50 mt-1">Size: {item.size} • Qty: {item.quantity}</p>
-                <p className="text-sm font-medium text-charcoal mt-1">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="text-sm font-medium text-charcoal mt-1">₹{(item.price * item.quantity).toFixed(2)}</p>
               </div>
             </div>
           ))}
@@ -77,21 +77,21 @@ export function OrderSummaryCard({ order }: OrderSummaryCardProps) {
         <div className="p-6 bg-charcoal/[0.02] border-t border-charcoal/10 space-y-2 text-sm">
           <div className="flex justify-between text-charcoal/60">
             <span>Subtotal</span>
-            <span>${order.amount?.subtotal.toFixed(2)}</span>
+            <span>₹{order.amount?.subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-charcoal/60">
             <span>Shipping</span>
-            <span>{order.amount?.shipping === 0 ? "Free" : `$${order.amount?.shipping.toFixed(2)}`}</span>
+            <span>{order.amount?.shipping === 0 ? "Free" : `₹${order.amount?.shipping.toFixed(2)}`}</span>
           </div>
           {order.amount?.savings > 0 && (
             <div className="flex justify-between text-success">
               <span>Savings</span>
-              <span>-${order.amount?.savings.toFixed(2)}</span>
+              <span>-₹{order.amount?.savings.toFixed(2)}</span>
             </div>
           )}
           <div className="flex justify-between items-center text-lg font-serif text-charcoal pt-4 border-t border-charcoal/10 mt-2">
             <span>Total</span>
-            <span>${order.amount?.total.toFixed(2)}</span>
+            <span>₹{order.amount?.total.toFixed(2)}</span>
           </div>
         </div>
       </div>
