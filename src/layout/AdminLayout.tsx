@@ -17,7 +17,7 @@ import {
 import { cn } from "../utils/utils"
 import { useAuth } from "../context/AuthContext"
 import { ThemeProvider, useTheme } from "../context/ThemeContext"
-import { Moon, Sun } from "lucide-react"
+import { Moon, Sun, MessageCircle } from "lucide-react"
 
 function AdminLayoutContent() {
   const location = useLocation()
@@ -32,6 +32,7 @@ function AdminLayoutContent() {
     { label: "Collections", icon: Tag, path: "/dashboard/collections" },
     { label: "Inventory", icon: PackageCheck, path: "/dashboard/inventory" },
     { label: "Orders", icon: Users, path: "/dashboard/orders" },
+    { label: "Subscribers", icon: MessageCircle, path: "/dashboard/subscribers" },
     { label: "Offers", icon: Tag, path: "/dashboard/offers" },
     { label: "Trending", icon: Tag, path: "/dashboard/trending" },
     { label: "Coupons", icon: Tag, path: "/dashboard/coupons" },

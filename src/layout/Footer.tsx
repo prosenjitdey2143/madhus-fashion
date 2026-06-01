@@ -1,5 +1,9 @@
+import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Globe } from "lucide-react"
+import { useToast } from "../context/ToastContext"
+import { subscriberService } from "../services/firebase/subscriberService"
+import { storeSettingsService } from "../services/firebase/storeSettingsService"
 
 const InstagramIcon = ({ className }: { className?: string }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -22,6 +26,39 @@ const TwitterIcon = ({ className }: { className?: string }) => (
 )
 
 export function Footer() {
+  const { toast } = useToast()
+  const [phone, setPhone] = useState("")
+  const [isSubscribing, setIsSubscribing] = useState(false)
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!phone) return
+
+    setIsSubscribing(true)
+    try {
+      // Save to database
+      await subscriberService.addSubscriber(phone)
+
+      // Get store WhatsApp number
+      const settings = await storeSettingsService.getSettings()
+      const whatsappNumber = settings?.whatsappNumber || ""
+
+      toast("Successfully subscribed!", "success")
+      setPhone("")
+
+      // Redirect to WhatsApp
+      if (whatsappNumber) {
+        const message = "Hi, I want to subscribe to the WhatsApp Insider for exclusive deals!"
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, "_blank")
+      }
+    } catch (err) {
+      console.error(err)
+      toast("Failed to subscribe. Please try again.", "error")
+    } finally {
+      setIsSubscribing(false)
+    }
+  }
+
   return (
     <footer className="bg-brand-text text-brand-primary pt-24 pb-12">
       <div className="container mx-auto px-4 md:px-8">
@@ -67,18 +104,21 @@ export function Footer() {
 
           {/* Newsletter */}
           <div className="md:col-span-4 lg:col-span-3">
-            <h4 className="font-serif text-lg mb-6 text-brand-primary">The Insider</h4>
+            <h4 className="font-serif text-lg mb-6 text-brand-primary">WhatsApp Insider</h4>
             <p className="text-[13px] text-brand-primary/60 mb-6 font-light leading-relaxed">
-              Subscribe to receive updates, access to exclusive deals, and editorial content.
+              Subscribe to receive updates, access to exclusive deals, and editorial content via WhatsApp.
             </p>
-            <form className="flex flex-col space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex flex-col space-y-4" onSubmit={handleSubscribe}>
               <input 
-                type="email" 
-                placeholder="Email Address" 
+                type="tel" 
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="WhatsApp Number" 
+                required
                 className="bg-transparent border-b border-brand-primary/20 pb-2 px-0 text-sm focus:outline-none focus:border-brand-accent text-brand-primary placeholder:text-brand-primary/40 transition-colors"
               />
-              <button type="submit" className="text-[11px] uppercase tracking-[0.2em] text-brand-text bg-brand-primary py-3 px-6 hover:bg-brand-accent hover:text-brand-primary transition-colors w-max mt-2">
-                Subscribe
+              <button disabled={isSubscribing} type="submit" className="text-[11px] uppercase tracking-[0.2em] text-brand-text bg-brand-primary py-3 px-6 hover:bg-brand-accent hover:text-brand-primary transition-colors w-max mt-2 disabled:opacity-50">
+                {isSubscribing ? "..." : "Subscribe"}
               </button>
             </form>
           </div>

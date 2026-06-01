@@ -32,6 +32,7 @@ const DashboardOverview = React.lazy(() => import("./pages/admin/DashboardOvervi
 const AdminProducts = React.lazy(() => import("./pages/admin/AdminProducts").then(module => ({ default: module.AdminProducts })))
 const AdminProductForm = React.lazy(() => import("./pages/admin/AdminProductForm").then(module => ({ default: module.AdminProductForm })))
 const AdminInventory = React.lazy(() => import("./pages/admin/AdminInventory").then(module => ({ default: module.AdminInventory })))
+const AdminSubscribers = React.lazy(() => import("./pages/admin/AdminSubscribers").then(module => ({ default: module.AdminSubscribers })))
 const AdminOrders = React.lazy(() => import("./pages/admin/AdminOrders").then(module => ({ default: module.AdminOrders })))
 const AdminOrderDetails = React.lazy(() => import("./pages/admin/AdminOrderDetails").then(module => ({ default: module.AdminOrderDetails })))
 const AdminOffers = React.lazy(() => import("./pages/admin/AdminOffers").then(module => ({ default: module.AdminOffers })))
@@ -191,6 +192,14 @@ const router = createHashRouter([
         element: (
           <PageWrapper title="Inventory Management">
             <AdminInventory />
+          </PageWrapper>
+        ),
+      },
+      {
+        path: "subscribers",
+        element: (
+          <PageWrapper title="Manage Subscribers">
+            <AdminSubscribers />
           </PageWrapper>
         ),
       },
