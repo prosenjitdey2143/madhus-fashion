@@ -148,26 +148,36 @@ export function AdminCouponForm() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-12">
-      <AdminPageHeader 
-        title={isEditing ? "Edit Coupon" : "Create Coupon"}
-        subtitle={isEditing ? `Editing ${formData.code}` : "Create a new discount code"}
-        backLink="/dashboard/coupons"
-        action={
-          <Button 
-            onClick={handleSubmit} 
-            disabled={saving}
-            className="flex items-center gap-2"
-          >
-            <Save className="w-4 h-4" />
-            <span>{saving ? "Saving..." : "Save Coupon"}</span>
-          </Button>
-        }
-      />
+      <div className="flex items-center gap-4 mb-2">
+        <button 
+          onClick={() => navigate("/dashboard/coupons")}
+          className="p-2 -ml-2 text-charcoal/40 dark:text-dark-muted hover:text-charcoal dark:hover:text-dark-text hover:bg-secondary/10 dark:hover:bg-dark-surfaceHover rounded-full transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <div className="flex-1">
+          <AdminPageHeader 
+            title={isEditing ? "Edit Coupon" : "Create Coupon"}
+            subtitle={isEditing ? `Editing ${formData.code}` : "Create a new discount code"}
+            action={
+              <Button 
+                onClick={handleSubmit} 
+                disabled={saving}
+                className="flex items-center gap-2"
+              >
+                <Save className="w-4 h-4" />
+                <span>{saving ? "Saving..." : "Save Coupon"}</span>
+              </Button>
+            }
+          />
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-6">
-            <AdminCard title="Coupon Details">
+            <AdminCard className="space-y-6">
+              <h2 className="text-xl font-serif text-charcoal dark:text-dark-text mb-4">Coupon Details</h2>
               <div className="space-y-6">
                 <div>
                   <Label htmlFor="code">Coupon Code *</Label>
@@ -248,7 +258,8 @@ export function AdminCouponForm() {
           </div>
 
           <div className="space-y-6">
-            <AdminCard title="Status">
+            <AdminCard className="space-y-6">
+              <h2 className="text-xl font-serif text-charcoal dark:text-dark-text mb-4">Status</h2>
               <div className="space-y-6">
                 <div className="flex items-center justify-between p-4 bg-secondary/10 dark:bg-dark-pill rounded-lg">
                   <div>

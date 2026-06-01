@@ -416,6 +416,7 @@ export const MOCK_ORDERS: Order[] = [
     amount: {
       subtotal: 2050,
       shipping: 0, // Free shipping for luxury order
+      couponDiscount: 0,
       savings: 0,
       total: 2050
     },
@@ -444,6 +445,7 @@ export const MOCK_ORDERS: Order[] = [
     amount: {
       subtotal: 1600,
       shipping: 0,
+      couponDiscount: 0,
       savings: 160, // 10% off
       total: 1440
     },
@@ -471,6 +473,7 @@ export const MOCK_ORDERS: Order[] = [
     amount: {
       subtotal: 1590,
       shipping: 0,
+      couponDiscount: 0,
       savings: 0,
       total: 1590
     },
@@ -502,6 +505,7 @@ export const MOCK_ORDERS: Order[] = [
     amount: {
       subtotal: 700,
       shipping: 25,
+      couponDiscount: 0,
       savings: 0,
       total: 725
     },
@@ -530,6 +534,7 @@ export const MOCK_ORDERS: Order[] = [
     amount: {
       subtotal: 2140,
       shipping: 0,
+      couponDiscount: 0,
       savings: 0,
       total: 2140
     },

@@ -51,7 +51,7 @@ export interface Order {
     postalCode: string;
   };
   products: CartItem[];
-  appliedCoupon?: string;
+  appliedCoupon?: string | null;
   amount: {
     subtotal: number;
     shipping: number;
