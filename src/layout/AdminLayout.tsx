@@ -11,7 +11,8 @@ import {
   Search,
   Bell,
   PackageCheck,
-  PlayCircle
+  PlayCircle,
+  X
 } from "lucide-react"
 import { cn } from "../utils/utils"
 import { useAuth } from "../context/AuthContext"
@@ -44,11 +45,17 @@ function AdminLayoutContent() {
 
   const SidebarContent = () => (
     <>
-      <div className="h-20 flex items-center px-8 border-b border-charcoal/10 dark:border-dark-border shrink-0">
+      <div className="h-20 flex items-center justify-between px-8 border-b border-charcoal/10 dark:border-dark-border shrink-0">
         <Link to="/" className="text-xl font-serif tracking-widest text-charcoal dark:text-dark-text flex items-center gap-2">
           MADHUS
           <span className="text-[10px] uppercase tracking-wider text-charcoal dark:text-dark-text bg-secondary/50 dark:bg-dark-pill px-2 py-0.5 rounded-sm font-sans font-semibold">Admin</span>
         </Link>
+        <button 
+          onClick={() => setMobileMenuOpen(false)}
+          className="lg:hidden p-2 -mr-2 text-charcoal/50 dark:text-dark-muted hover:text-charcoal dark:hover:text-dark-text hover:bg-secondary/20 dark:hover:bg-dark-surfaceHover rounded-lg transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
       
       <nav className="flex-1 py-8 px-4 space-y-2 overflow-y-auto">
@@ -95,17 +102,21 @@ function AdminLayoutContent() {
 
       {/* Mobile Sidebar Overlay */}
       <>
-        {mobileMenuOpen && (
-          <>
-            <div onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-charcoal/20 backdrop-blur-sm z-40 lg:hidden"
-            />
-            <aside className="fixed inset-y-0 left-0 w-[280px] bg-white dark:bg-dark-surface shadow-2xl z-50 flex flex-col lg:hidden"
-            >
-              <SidebarContent />
-            </aside>
-          </>
-        )}
+        <div 
+          onClick={() => setMobileMenuOpen(false)}
+          className={cn(
+            "fixed inset-0 bg-charcoal/20 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300",
+            mobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          )}
+        />
+        <aside 
+          className={cn(
+            "fixed inset-y-0 left-0 w-[280px] bg-white dark:bg-dark-surface shadow-2xl z-50 flex flex-col lg:hidden transition-transform duration-300 ease-in-out",
+            mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          )}
+        >
+          <SidebarContent />
+        </aside>
       </>
 
       {/* Main Content Area */}
