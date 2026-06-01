@@ -295,9 +295,9 @@ export function Payment() {
           <ShieldCheck className="w-5 h-5" />
           Pay with UPI
         </h2>
-        <div className="flex flex-col md:flex-row items-center gap-8">
+        <div className="flex flex-col md:flex-row md:items-center gap-8">
           {/* QR Code */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 mx-auto md:mx-0">
             {qrCodeUrl ? (
               <img loading="lazy" src={qrCodeUrl} alt="UPI QR Code" className="w-48 h-48 object-contain border border-charcoal/20 rounded bg-white p-2" />
             ) : (
@@ -308,7 +308,7 @@ export function Payment() {
             )}
           </div>
           {/* UPI Details */}
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 space-y-4 min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <span className="font-medium text-charcoal">UPI ID:</span>
               <code className="bg-secondary/10 px-2 py-1 rounded text-sm text-charcoal break-all">{upiId}</code>
