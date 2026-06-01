@@ -1,4 +1,4 @@
-import { Package, Users, DollarSign, AlertTriangle, Plus, ListOrdered, Tag, ArrowRight, Clock } from "lucide-react"
+import { Package, Users, IndianRupee, AlertTriangle, Plus, ListOrdered, Tag, ArrowRight, Clock } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
 import { AdminPageHeader } from "../../ui/admin/AdminPageHeader"
 import { AdminCard } from "../../ui/admin/AdminCard"
@@ -39,8 +39,8 @@ export function DashboardOverview() {
       >
         <MetricCard 
           title="Total Revenue" 
-          value={loading ? null : `$${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} 
-          icon={<DollarSign className="w-5 h-5 text-charcoal/60 dark:text-dark-muted" />} 
+          value={loading ? null : `₹${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} 
+          icon={<IndianRupee className="w-5 h-5 text-charcoal/60 dark:text-dark-muted" />} 
           trend="Lifetime Revenue"
         />
         <MetricCard 

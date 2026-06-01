@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { Search, Filter, Package, DollarSign, Clock, CheckCircle, Eye } from "lucide-react"
+import { Search, Filter, Package, IndianRupee, Clock, CheckCircle, Eye } from "lucide-react"
 import { orderService } from "../../services/firebase/orderService"
 import type { Order } from "../../types"
 import { Button } from "../../ui/Button"
@@ -58,7 +58,9 @@ export function AdminOrders() {
   const totalOrders = orders.length
   const pendingOrders = orders.filter(o => o.orderStatus === "pending" || o.orderStatus === "processing").length
   const completedOrders = orders.filter(o => o.orderStatus === "delivered").length
-  const totalRevenue = orders.reduce((sum, order) => sum + (order.amount?.total || 0), 0)
+  const totalRevenue = orders.reduce((sum, order) => {
+    return order.paymentStatus === 'verified' ? sum + (order.amount?.total || 0) : sum
+  }, 0)
 
   const MetricCard = ({ title, value, icon: Icon, trend }: any) => (
     <div className="bg-white dark:bg-dark-surface p-6 rounded-xl border border-charcoal/10 dark:border-dark-border shadow-sm flex flex-col justify-between transition-colors">
@@ -135,7 +137,7 @@ export function AdminOrders() {
       {/* Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard title="Total Orders" value={totalOrders} icon={Package} />
-        <MetricCard title="Total Revenue" value={`$${totalRevenue.toFixed(2)}`} icon={DollarSign} trend={12} />
+        <MetricCard title="Total Revenue" value={`₹${totalRevenue.toFixed(2)}`} icon={IndianRupee} trend={12} />
         <MetricCard title="Action Required" value={pendingOrders} icon={Clock} />
         <MetricCard title="Completed" value={completedOrders} icon={CheckCircle} />
       </div>

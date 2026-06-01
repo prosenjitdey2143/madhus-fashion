@@ -37,10 +37,10 @@ export function useDashboardMetrics(): DashboardMetrics {
 
         if (!isMounted) return;
 
-        // Calculate Revenue (all non-cancelled orders)
+        // Calculate Revenue (only verified payments)
         const totalRevenue = orders.reduce((sum, order) => {
-          if (order.orderStatus !== 'cancelled') {
-            return sum + order.amount.total;
+          if (order.paymentStatus === 'verified') {
+            return sum + (order.amount?.total || 0);
           }
           return sum;
         }, 0);
