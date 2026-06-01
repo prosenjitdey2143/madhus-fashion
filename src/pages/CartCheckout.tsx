@@ -310,8 +310,9 @@ export function Checkout() {
   if (totalPrice < shippingThreshold) {
     const stateStr = formData.state.toLowerCase().trim();
     const isWestBengal = stateStr === 'west bengal' || stateStr === 'wb';
-    const ratePerKg = isWestBengal ? 50 : 85;
-    shippingCost = totalWeight * ratePerKg;
+    const baseRate = isWestBengal ? 40 : 80;
+    const calculatedWeight = Math.max(1, Math.ceil(totalWeight));
+    shippingCost = calculatedWeight * baseRate;
   }
   
   const grandTotal = totalPrice - couponDiscount + shippingCost;

@@ -218,9 +218,9 @@ export function Payment() {
                 <p className="text-xs text-charcoal/50">Size: {item.size}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm font-medium text-charcoal">${(item.price * item.quantity).toFixed(2)}</p>
+                <p className="text-sm font-medium text-charcoal">₹{(item.price * item.quantity).toFixed(2)}</p>
                 {item.originalPrice && (
-                  <p className="text-xs text-charcoal/40 line-through mt-0.5">${(item.originalPrice * item.quantity).toFixed(2)}</p>
+                  <p className="text-xs text-charcoal/40 line-through mt-0.5">₹{(item.originalPrice * item.quantity).toFixed(2)}</p>
                 )}
               </div>
             </div>
