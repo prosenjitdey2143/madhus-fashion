@@ -195,7 +195,8 @@ export function Payment() {
   const grandTotal = amount?.total ?? 0
 
   return (
-    <div className="container mx-auto px-4 py-12 md:py-20 max-w-4xl min-h-screen">
+    <div className="bg-brand-primary pt-[104px] min-h-screen">
+      <div className="container mx-auto px-4 pt-6 pb-12 md:py-20 max-w-4xl">
       <h1 className="text-4xl md:text-5xl font-serif text-charcoal mb-8 text-center">
         Secure Payment
       </h1>
@@ -308,9 +309,9 @@ export function Payment() {
           </div>
           {/* UPI Details */}
           <div className="flex-1 space-y-4">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="font-medium text-charcoal">UPI ID:</span>
-              <code className="bg-secondary/10 px-2 py-1 rounded text-sm text-charcoal">{upiId}</code>
+              <code className="bg-secondary/10 px-2 py-1 rounded text-sm text-charcoal break-all">{upiId}</code>
               <Button variant="outline" size="sm" onClick={handleCopyUPI} className="flex items-center gap-1">
                 <ClipboardCopy className="w-3 h-3" />
                 Copy
@@ -336,6 +337,7 @@ export function Payment() {
         <Link to="/cart" className="text-sm text-charcoal/50 hover:text-charcoal transition-colors">
           Return to Cart
         </Link>
+      </div>
       </div>
     </div>
   )
