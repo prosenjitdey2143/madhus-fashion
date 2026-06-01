@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect } from "react"
-import { createHashRouter, RouterProvider } from "react-router-dom"
+import { createHashRouter, RouterProvider, useRouteError } from "react-router-dom"
 import { HelmetProvider } from "react-helmet-async"
 import { AuthProvider } from "./context/AuthContext"
 import { CartProvider } from "./context/CartContext"
@@ -46,11 +46,40 @@ const AdminVideos = React.lazy(() => import("./pages/admin/AdminVideos").then(mo
 const AdminVideoForm = React.lazy(() => import("./pages/admin/AdminVideoForm").then(module => ({ default: module.AdminVideoForm })))
 const AdminCoupons = React.lazy(() => import("./pages/admin/AdminCoupons").then(module => ({ default: module.AdminCoupons })))
 const AdminCouponForm = React.lazy(() => import("./pages/admin/AdminCouponForm").then(module => ({ default: module.AdminCouponForm })))
+// Global Error Boundary to handle ChunkLoadErrors after deployments
+function GlobalErrorBoundary() {
+  const error = useRouteError() as Error;
+  
+  if (
+    error?.name === 'ChunkLoadError' || 
+    error?.message?.includes('Failed to fetch dynamically imported module') ||
+    error?.message?.includes('Importing a module script failed')
+  ) {
+    // Hard refresh to fetch new chunks
+    window.location.reload();
+    return <FullPageLoader />;
+  }
+
+  return (
+    <div className="p-8 text-center flex flex-col items-center justify-center min-h-screen bg-[#FDFBF9]">
+      <h2 className="text-2xl font-serif mb-2 text-charcoal">Oops! Something went wrong.</h2>
+      <p className="mb-6 text-charcoal/60 max-w-md">{error?.message || "An unexpected error occurred."}</p>
+      <button 
+        onClick={() => window.location.reload()} 
+        className="px-6 py-3 bg-charcoal text-white rounded-full hover:bg-charcoal/90 transition-colors"
+      >
+        Refresh Page
+      </button>
+    </div>
+  );
+}
+
 // Architecture: HashRouter is used for GitHub pages compatibility (no server config required).
 const router = createHashRouter([
   {
     path: "/",
     element: <MainLayout />,
+    errorElement: <GlobalErrorBoundary />,
     children: [
       {
         index: true,
@@ -122,6 +151,7 @@ const router = createHashRouter([
         <AdminLogin />
       </PageWrapper>
     ),
+    errorElement: <GlobalErrorBoundary />,
   },
   {
     path: "/dashboard",
@@ -130,6 +160,7 @@ const router = createHashRouter([
         <AdminLayout />
       </ProtectedRoute>
     ),
+    errorElement: <GlobalErrorBoundary />,
     children: [
       {
         index: true,
