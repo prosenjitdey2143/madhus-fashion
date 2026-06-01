@@ -51,9 +51,11 @@ export interface Order {
     postalCode: string;
   };
   products: CartItem[];
+  appliedCoupon?: string;
   amount: {
     subtotal: number;
     shipping: number;
+    couponDiscount: number;
     total: number;
     savings: number;
   };
@@ -124,6 +126,17 @@ export interface DBCollection {
   link: string;
   active: boolean;
   priority: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Coupon {
+  id: string;
+  code: string;
+  type: 'percentage' | 'fixed';
+  value: number;
+  isActive: boolean;
+  minOrderValue?: number;
   createdAt: string;
   updatedAt: string;
 }

@@ -44,6 +44,8 @@ const AdminSettings = React.lazy(() => import("./pages/admin/AdminSettings").the
 const AdminTrending = React.lazy(() => import("./pages/admin/AdminTrending").then(module => ({ default: module.AdminTrending })))
 const AdminVideos = React.lazy(() => import("./pages/admin/AdminVideos").then(module => ({ default: module.AdminVideos })))
 const AdminVideoForm = React.lazy(() => import("./pages/admin/AdminVideoForm").then(module => ({ default: module.AdminVideoForm })))
+const AdminCoupons = React.lazy(() => import("./pages/admin/AdminCoupons").then(module => ({ default: module.AdminCoupons })))
+const AdminCouponForm = React.lazy(() => import("./pages/admin/AdminCouponForm").then(module => ({ default: module.AdminCouponForm })))
 // Architecture: HashRouter is used for GitHub pages compatibility (no server config required).
 const router = createHashRouter([
   {
@@ -270,6 +272,30 @@ const router = createHashRouter([
         element: (
           <PageWrapper title="Trending Now">
             <AdminTrending />
+          </PageWrapper>
+        ),
+      },
+      {
+        path: "coupons",
+        element: (
+          <PageWrapper title="Manage Coupons">
+            <AdminCoupons />
+          </PageWrapper>
+        ),
+      },
+      {
+        path: "coupons/new",
+        element: (
+          <PageWrapper title="Add Coupon">
+            <AdminCouponForm />
+          </PageWrapper>
+        ),
+      },
+      {
+        path: "coupons/edit/:id",
+        element: (
+          <PageWrapper title="Edit Coupon">
+            <AdminCouponForm />
           </PageWrapper>
         ),
       },

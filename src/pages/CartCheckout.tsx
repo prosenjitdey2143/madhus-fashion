@@ -8,15 +8,79 @@ import { useCart } from "../context/CartContext"
 import { useToast } from "../context/ToastContext"
 import { orderService } from "../services/firebase/orderService"
 
+// --- Promo Code Component ---
+function PromoCodeForm() {
+  const { appliedCoupon, applyCoupon, removeCoupon, totalPrice } = useCart()
+  const { toast } = useToast()
+  const [code, setCode] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!code) return
+    setIsLoading(true)
+    const result = await applyCoupon(code)
+    setIsLoading(false)
+    
+    if (result.success) {
+      toast(result.message, "success")
+      setCode("")
+    } else {
+      toast(result.message, "error")
+    }
+  }
+
+  if (appliedCoupon) {
+    return (
+      <div className="mt-6 mb-6 p-4 bg-success/5 border border-success/20 flex justify-between items-center">
+        <div>
+          <p className="text-[12px] font-medium text-success flex items-center gap-2">
+            Coupon Applied <ShieldCheck className="w-4 h-4" />
+          </p>
+          <p className="text-[10px] text-success/80 uppercase tracking-widest mt-1">
+            {appliedCoupon.code} - {appliedCoupon.type === 'percentage' ? `${appliedCoupon.value}% OFF` : `₹${appliedCoupon.value} OFF`}
+          </p>
+        </div>
+        <button 
+          onClick={removeCoupon}
+          className="text-[10px] text-brand-text/50 hover:text-error uppercase tracking-widest transition-colors"
+        >
+          Remove
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-6 mb-6 flex gap-2">
+      <input 
+        type="text" 
+        value={code}
+        onChange={(e) => setCode(e.target.value.toUpperCase())}
+        placeholder="Promo / Coupon Code" 
+        className="flex-grow bg-transparent border-b border-brand-text/20 py-2 px-2 text-[13px] font-light focus:outline-none focus:border-brand-text uppercase"
+      />
+      <button 
+        type="submit" 
+        disabled={isLoading || !code}
+        className="px-6 py-2 bg-brand-text text-brand-primary text-[10px] uppercase tracking-widest hover:bg-brand-text/80 transition-colors disabled:opacity-50"
+      >
+        {isLoading ? "..." : "Apply"}
+      </button>
+    </form>
+  )
+}
+// ----------------------------
+
 export function Cart() {
-  const { items, removeItem, updateQuantity, totalPrice, savings, clearCart } = useCart()
+  const { items, removeItem, updateQuantity, totalPrice, savings, clearCart, couponDiscount } = useCart()
   const [isClearing, setIsClearing] = useState(false)
 
   // Cart component doesn't know the user's state, so we estimate based on the highest rate (85) or just say "Calculated at checkout"
   const shippingThreshold = 1000;
   // If cart total is >= 1000, shipping is free. Otherwise we leave it to be calculated at checkout.
   const isShippingFree = totalPrice >= shippingThreshold && items.length > 0;
-  const grandTotal = totalPrice;
+  const grandTotal = totalPrice - couponDiscount;
 
   if (items.length === 0) {
     return (
@@ -139,9 +203,11 @@ export function Cart() {
           </div>
 
           <div className="lg:col-span-5 xl:col-span-4">
-            <div className="bg-brand-pale p-8 lg:p-10 sticky top-[140px]">
-              <h2 className="text-xl font-serif text-brand-text mb-8 pb-4 border-b border-brand-text/10">Order Summary</h2>
+              <div className="bg-brand-pale p-8 lg:p-10 sticky top-[140px]">
+              <h2 className="text-xl font-serif text-brand-text mb-4 pb-4 border-b border-brand-text/10">Order Summary</h2>
               
+              <PromoCodeForm />
+
               <div className="space-y-6 text-[13px] text-brand-text/80 mb-8 font-light">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
@@ -152,6 +218,13 @@ export function Cart() {
                   <div className="flex justify-between text-success">
                     <span>Savings</span>
                     <span>-₹{savings.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {couponDiscount > 0 && (
+                  <div className="flex justify-between text-success">
+                    <span>Coupon Discount</span>
+                    <span>-₹{couponDiscount.toFixed(2)}</span>
                   </div>
                 )}
                 
@@ -189,7 +262,7 @@ export function Cart() {
 }
 
 export function Checkout() {
-  const { items, totalPrice, savings, clearCart } = useCart()
+  const { items, totalPrice, savings, clearCart, couponDiscount, appliedCoupon } = useCart()
   const navigate = useNavigate()
   const { toast } = useToast()
   
@@ -232,7 +305,7 @@ export function Checkout() {
   const shippingThreshold = 1000;
   const totalWeight = items.reduce((sum, item) => sum + (item.quantity * (item.weight || 0.5)), 0);
   
-  // Calculate dynamic shipping
+  // Calculate dynamic shipping based on subtotal *before* coupon
   let shippingCost = 0;
   if (totalPrice < shippingThreshold) {
     const stateStr = formData.state.toLowerCase().trim();
@@ -241,7 +314,7 @@ export function Checkout() {
     shippingCost = totalWeight * ratePerKg;
   }
   
-  const grandTotal = totalPrice + shippingCost;
+  const grandTotal = totalPrice - couponDiscount + shippingCost;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -299,9 +372,11 @@ export function Checkout() {
           postalCode: formData.pincode
         },
         products: items,
+        appliedCoupon: appliedCoupon?.code,
         amount: {
           subtotal: totalPrice,
           shipping: shippingCost,
+          couponDiscount: couponDiscount,
           total: grandTotal,
           savings: savings
         },
@@ -477,10 +552,12 @@ export function Checkout() {
           {/* Right Column: Order Summary */}
           <div className="lg:col-span-5 xl:col-span-4">
             <div className="bg-brand-pale p-8 lg:p-10 sticky top-[140px]">
-              <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium text-brand-text mb-8 pb-4 border-b border-brand-text/10 flex justify-between items-center">
+              <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium text-brand-text mb-4 pb-4 border-b border-brand-text/10 flex justify-between items-center">
                 <span>In Your Bag</span>
                 <span className="text-brand-text/60">{items.length} {items.length === 1 ? 'Item' : 'Items'}</span>
               </h2>
+
+              <PromoCodeForm />
               
               <div className="space-y-6 mb-10 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
                 {items.map((item) => (
@@ -515,6 +592,13 @@ export function Checkout() {
                   <div className="flex justify-between text-success">
                     <span>Discount</span>
                     <span>-₹{savings.toFixed(2)}</span>
+                  </div>
+                )}
+
+                {couponDiscount > 0 && (
+                  <div className="flex justify-between text-success">
+                    <span>Coupon ({appliedCoupon?.code})</span>
+                    <span>-₹{couponDiscount.toFixed(2)}</span>
                   </div>
                 )}
                 

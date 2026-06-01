@@ -33,6 +33,7 @@ function AdminLayoutContent() {
     { label: "Orders", icon: Users, path: "/dashboard/orders" },
     { label: "Offers", icon: Tag, path: "/dashboard/offers" },
     { label: "Trending", icon: Tag, path: "/dashboard/trending" },
+    { label: "Coupons", icon: Tag, path: "/dashboard/coupons" },
     { label: "Live & Reels", icon: PlayCircle, path: "/dashboard/videos" },
     { label: "Settings", icon: Settings, path: "/dashboard/settings" },
   ]
@@ -120,15 +121,7 @@ function AdminLayoutContent() {
               <Menu className="w-6 h-6" />
             </button>
             
-            {/* Search Placeholder */}
-            <div className="hidden sm:flex items-center bg-secondary/10 dark:bg-dark-pill px-4 py-2 rounded-full border border-charcoal/5 dark:border-dark-border focus-within:border-charcoal/20 transition-colors w-64 lg:w-96">
-              <Search className="w-4 h-4 text-charcoal/40 dark:text-dark-muted mr-2" />
-              <input 
-                type="text" 
-                placeholder="Search products, orders..." 
-                className="bg-transparent border-none focus:outline-none text-sm w-full placeholder:text-charcoal/40 dark:placeholder:text-dark-muted/60 dark:text-dark-text"
-              />
-            </div>
+            <div className="hidden sm:flex flex-1"></div>
           </div>
 
           <div className="flex items-center gap-4 sm:gap-6">

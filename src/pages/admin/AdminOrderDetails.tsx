@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useParams, useNavigate } from "react-router-dom"
+import { useParams, useNavigate, Link } from "react-router-dom"
 import { 
   ArrowLeft, 
   MapPin, 
@@ -9,7 +9,10 @@ import {
   CheckCircle,
   XCircle,
   Truck,
-  Package
+  Package,
+  ExternalLink,
+  ZoomIn,
+  X
 } from "lucide-react"
 import { serverTimestamp } from "firebase/firestore"
 import { orderService } from "../../services/firebase/orderService"
@@ -31,6 +34,9 @@ export function AdminOrderDetails() {
   const [cancelModalOpen, setCancelModalOpen] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
   const [feedback, setFeedback] = useState<{type: "success" | "error", message: string} | null>(null)
+  
+  // Image Preview State
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
 
   useEffect(() => {
     if (orderId) {
@@ -269,11 +275,26 @@ export function AdminOrderDetails() {
             <div className="divide-y divide-charcoal/5 dark:divide-dark-border">
               {order.products.map((item: CartItem) => (
                 <div key={item.id} className="p-6 md:px-8 flex flex-col sm:flex-row gap-6 items-start sm:items-center hover:bg-secondary/5 dark:hover:bg-dark-surfaceHover transition-colors">
-                  <div className="w-20 h-24 bg-secondary/20 dark:bg-dark-bg rounded flex-shrink-0 relative overflow-hidden border border-charcoal/5 dark:border-dark-border">
-                    <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
-                  </div>
+                  <button 
+                    onClick={() => setPreviewImage(item.imageUrl)}
+                    className="w-20 h-24 bg-secondary/20 dark:bg-dark-bg rounded flex-shrink-0 relative overflow-hidden border border-charcoal/5 dark:border-dark-border group cursor-zoom-in"
+                    title="Click to enlarge image"
+                  >
+                    <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/20 transition-colors flex items-center justify-center">
+                      <ZoomIn className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                  </button>
                   <div className="flex-grow">
-                    <h3 className="font-medium text-charcoal dark:text-dark-text text-lg">{item.name}</h3>
+                    <Link 
+                      to={`/products/${item.productId}`} 
+                      target="_blank" 
+                      className="font-medium text-charcoal dark:text-dark-text text-lg hover:text-brand-accent transition-colors inline-flex items-center gap-2 group"
+                      title="View product on storefront"
+                    >
+                      {item.name}
+                      <ExternalLink className="w-4 h-4 opacity-0 group-hover:opacity-100 text-brand-accent transition-opacity" />
+                    </Link>
                     <div className="flex items-center gap-4 mt-2 text-sm text-charcoal/60 dark:text-dark-muted">
                       <p>Size: <span className="font-medium text-charcoal dark:text-dark-text">{item.size}</span></p>
                       <div className="w-1 h-1 bg-charcoal/20 dark:bg-dark-border rounded-full" />
@@ -500,6 +521,29 @@ export function AdminOrderDetails() {
         type="danger"
         isLoading={actionLoading}
       />
+
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent"
+          onClick={() => setPreviewImage(null)}
+        >
+          <div className="relative inline-block max-w-[90vw] max-h-[90vh]">
+            <img 
+              src={previewImage} 
+              alt="Product Preview" 
+              className="max-w-full max-h-[90vh] object-contain rounded shadow-2xl bg-white dark:bg-dark-surface"
+              onClick={(e) => e.stopPropagation()} 
+            />
+            <button 
+              onClick={() => setPreviewImage(null)}
+              className="absolute top-2 right-2 p-1.5 bg-white/90 dark:bg-charcoal/90 rounded-full text-charcoal dark:text-white hover:bg-white transition-colors shadow-sm"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

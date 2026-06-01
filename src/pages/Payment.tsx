@@ -5,7 +5,8 @@ import { Button } from "../ui/Button"
 import { useToast } from "../context/ToastContext"
 import { orderService } from "../services/firebase/orderService"
 import { storeSettingsService } from "../services/firebase/storeSettingsService"
-import { ClipboardCopy, ShieldCheck, MessageCircle, QrCode } from "lucide-react"
+import { couponService } from "../services/firebase/couponService"
+import { ClipboardCopy, ShieldCheck, MessageCircle, QrCode, Tag } from "lucide-react"
 
 export function Payment() {
   const { orderId } = useParams<{ orderId: string }>()
@@ -16,6 +17,10 @@ export function Payment() {
   const [upiId, setUpiId] = useState("madhusfashion@upi")
   const [whatsappNumber, setWhatsappNumber] = useState("")
   const [qrCodeUrl, setQrCodeUrl] = useState("")
+
+  // Coupon state
+  const [couponCode, setCouponCode] = useState("")
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false)
 
   useEffect(() => {
     async function fetchDetails() {
@@ -91,6 +96,91 @@ export function Payment() {
     }
   }
 
+  const handleApplyCoupon = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!couponCode || !orderId || !order) return
+    setIsApplyingCoupon(true)
+    try {
+      const coupon = await couponService.getCouponByCode(couponCode)
+      if (!coupon) {
+        toast("Invalid coupon code", "error")
+        return
+      }
+      if (!coupon.isActive) {
+        toast("This coupon is no longer active", "error")
+        return
+      }
+      if (coupon.minOrderValue && order.amount.subtotal < coupon.minOrderValue) {
+        toast(`This coupon requires a minimum order of ₹${coupon.minOrderValue}`, "error")
+        return
+      }
+
+      let discount = 0
+      if (coupon.type === 'percentage') {
+        discount = order.amount.subtotal * (coupon.value / 100)
+      } else {
+        discount = coupon.value
+      }
+
+      const newTotal = order.amount.subtotal + order.amount.shipping - discount
+      
+      const newAmount = {
+        ...order.amount,
+        couponDiscount: discount,
+        total: newTotal
+      }
+
+      await orderService.updateOrder(orderId, {
+        amount: newAmount,
+        appliedCoupon: coupon.code
+      })
+
+      setOrder({
+        ...order,
+        amount: newAmount,
+        appliedCoupon: coupon.code
+      })
+
+      setCouponCode("")
+      toast("Coupon applied successfully!", "success")
+    } catch (err) {
+      console.error(err)
+      toast("Failed to apply coupon", "error")
+    } finally {
+      setIsApplyingCoupon(false)
+    }
+  }
+
+  const handleRemoveCoupon = async () => {
+    if (!orderId || !order) return
+    setIsApplyingCoupon(true)
+    try {
+      const newTotal = order.amount.subtotal + order.amount.shipping
+      const newAmount = {
+        ...order.amount,
+        couponDiscount: 0,
+        total: newTotal
+      }
+
+      await orderService.updateOrder(orderId, {
+        amount: newAmount,
+        appliedCoupon: null
+      })
+
+      setOrder({
+        ...order,
+        amount: newAmount,
+        appliedCoupon: null
+      })
+      toast("Coupon removed", "success")
+    } catch (err) {
+      console.error(err)
+      toast("Failed to remove coupon", "error")
+    } finally {
+      setIsApplyingCoupon(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -135,10 +225,67 @@ export function Payment() {
             </div>
           ))}
         </div>
+        <div className="border-t border-charcoal/10 pt-4 mt-4 text-sm flex justify-between">
+          <span>Subtotal</span>
+          <span className="text-charcoal font-medium">₹{amount?.subtotal?.toFixed(2)}</span>
+        </div>
+        <div className="pt-2 text-sm flex justify-between">
+          <span>Shipping</span>
+          <span className="text-charcoal font-medium">₹{amount?.shipping?.toFixed(2)}</span>
+        </div>
+        {amount?.couponDiscount > 0 && (
+          <div className="pt-2 text-sm flex justify-between text-success">
+            <span>Coupon Discount ({order.appliedCoupon})</span>
+            <span className="font-medium">-₹{amount?.couponDiscount?.toFixed(2)}</span>
+          </div>
+        )}
         <div className="border-t border-charcoal/10 pt-4 mt-4 text-lg font-serif flex justify-between">
           <span>Total to Pay</span>
-          <span className="text-charcoal">${grandTotal.toFixed(2)}</span>
+          <span className="text-charcoal">₹{grandTotal.toFixed(2)}</span>
         </div>
+      </section>
+
+      {/* Promo Code Section */}
+      <section className="bg-secondary/5 border border-charcoal/10 rounded-lg p-6 mb-8">
+        <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium text-charcoal mb-4 flex items-center gap-2">
+          <Tag className="w-4 h-4" /> Have a promo code?
+        </h2>
+        {order.appliedCoupon ? (
+          <div className="p-4 bg-success/5 border border-success/20 flex justify-between items-center rounded">
+            <div>
+              <p className="text-[12px] font-medium text-success flex items-center gap-2">
+                Coupon Applied <ShieldCheck className="w-4 h-4" />
+              </p>
+              <p className="text-[10px] text-success/80 uppercase tracking-widest mt-1">
+                {order.appliedCoupon} - ₹{order.amount?.couponDiscount?.toFixed(2)} OFF
+              </p>
+            </div>
+            <button 
+              onClick={handleRemoveCoupon}
+              disabled={isApplyingCoupon}
+              className="text-[10px] text-charcoal/50 hover:text-red-500 uppercase tracking-widest transition-colors disabled:opacity-50"
+            >
+              Remove
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleApplyCoupon} className="flex gap-2">
+            <input 
+              type="text" 
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+              placeholder="Enter Code" 
+              className="flex-grow bg-white border border-charcoal/20 py-2 px-3 text-[13px] font-light focus:outline-none focus:border-charcoal uppercase rounded-l"
+            />
+            <button 
+              type="submit" 
+              disabled={isApplyingCoupon || !couponCode}
+              className="px-6 py-2 bg-charcoal text-white text-[10px] uppercase tracking-widest hover:bg-charcoal/80 transition-colors disabled:opacity-50 rounded-r"
+            >
+              {isApplyingCoupon ? "..." : "Apply"}
+            </button>
+          </form>
+        )}
       </section>
 
       {/* UPI Payment Section */}

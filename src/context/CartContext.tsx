@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { CartItem } from '../types';
+import type { CartItem, Coupon } from '../types';
 import { analyticsService } from '../services/analytics/analyticsService';
+import { couponService } from '../services/firebase/couponService';
 
 interface CartContextType {
   items: CartItem[];
@@ -9,10 +10,15 @@ interface CartContextType {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
-  totalPrice: number;
+  totalPrice: number; // Subtotal before coupon
   savings: number;
   isCartOpen: boolean;
   setCartOpen: (isOpen: boolean) => void;
+  // Coupon additions
+  appliedCoupon: Coupon | null;
+  applyCoupon: (code: string) => Promise<{ success: boolean; message: string }>;
+  removeCoupon: () => void;
+  couponDiscount: number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -20,6 +26,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
 
   // Calculate totals
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -30,6 +37,58 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
     return sum;
   }, 0);
+
+  // Calculate Coupon Discount
+  let couponDiscount = 0;
+  if (appliedCoupon && items.length > 0) {
+    if (appliedCoupon.type === 'percentage') {
+      couponDiscount = totalPrice * (appliedCoupon.value / 100);
+    } else {
+      couponDiscount = appliedCoupon.value;
+    }
+    // ensure discount doesn't exceed total
+    if (couponDiscount > totalPrice) {
+      couponDiscount = totalPrice;
+    }
+  }
+
+  // Auto-remove coupon if cart is empty or drops below minimum order value
+  useEffect(() => {
+    if (appliedCoupon) {
+      if (items.length === 0) {
+        setAppliedCoupon(null);
+      } else if (appliedCoupon.minOrderValue && totalPrice < appliedCoupon.minOrderValue) {
+        setAppliedCoupon(null);
+      }
+    }
+  }, [items, totalPrice, appliedCoupon]);
+
+  const applyCoupon = async (code: string): Promise<{ success: boolean; message: string }> => {
+    if (!code.trim()) return { success: false, message: "Please enter a code." };
+    
+    try {
+      const coupon = await couponService.getCouponByCode(code);
+      
+      if (!coupon) {
+        return { success: false, message: "Invalid coupon code." };
+      }
+      if (!coupon.isActive) {
+        return { success: false, message: "This coupon is no longer active." };
+      }
+      if (coupon.minOrderValue && totalPrice < coupon.minOrderValue) {
+        return { success: false, message: `Minimum order value of ₹${coupon.minOrderValue} required.` };
+      }
+
+      setAppliedCoupon(coupon);
+      return { success: true, message: "Coupon applied successfully!" };
+    } catch (error) {
+      return { success: false, message: "Error validating coupon. Try again." };
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+  };
 
   const addItem = (newItem: Omit<CartItem, 'id'>) => {
     analyticsService.addToCart(newItem, newItem.quantity);
@@ -77,7 +136,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     ));
   };
 
-  const clearCart = () => setItems([]);
+  const clearCart = () => {
+    setItems([]);
+    setAppliedCoupon(null);
+  };
 
   // LocalStorage persistence scaffolding
   useEffect(() => {
@@ -86,17 +148,27 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (saved) {
       try { setItems(JSON.parse(saved)); } catch (e) {}
     }
+    const savedCoupon = localStorage.getItem('madhus_coupon');
+    if (savedCoupon) {
+      try { setAppliedCoupon(JSON.parse(savedCoupon)); } catch (e) {}
+    }
   }, []);
 
   useEffect(() => {
     // Save to localStorage on change
     localStorage.setItem('madhus_cart', JSON.stringify(items));
-  }, [items]);
+    if (appliedCoupon) {
+      localStorage.setItem('madhus_coupon', JSON.stringify(appliedCoupon));
+    } else {
+      localStorage.removeItem('madhus_coupon');
+    }
+  }, [items, appliedCoupon]);
 
   return (
     <CartContext.Provider value={{ 
       items, addItem, removeItem, updateQuantity, clearCart, 
-      totalItems, totalPrice, savings, isCartOpen, setCartOpen: setIsCartOpen 
+      totalItems, totalPrice, savings, isCartOpen, setCartOpen: setIsCartOpen,
+      appliedCoupon, applyCoupon, removeCoupon, couponDiscount
     }}>
       {children}
     </CartContext.Provider>
