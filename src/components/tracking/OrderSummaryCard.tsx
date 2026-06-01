@@ -63,7 +63,7 @@ export function OrderSummaryCard({ order }: OrderSummaryCardProps) {
           {order.products.map(item => (
             <div key={item.id} className="p-4 sm:p-6 flex gap-4 hover:bg-secondary/5 transition-colors">
               <div className="w-16 h-20 bg-secondary/20 rounded relative overflow-hidden border border-charcoal/5 shrink-0">
-                <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                <img loading="lazy" src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 min-w-0 flex flex-col justify-center">
                 <h4 className="font-medium text-charcoal text-sm truncate">{item.name}</h4>

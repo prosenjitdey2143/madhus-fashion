@@ -40,16 +40,15 @@ export function ImageMagnifier({ src, alt, className, zoomLevel = 2.5 }: ImageMa
   return (
     <div 
       ref={containerRef}
-      className={cn("relative w-full h-full cursor-zoom-in group bg-brand-pale overflow-hidden", className)}
+      className={cn("relative w-full h-full cursor-zoom-in group bg-brand-pale", className)}
       onMouseEnter={() => setShowMagnifier(true)}
       onMouseLeave={() => setShowMagnifier(false)}
       onMouseMove={handleMouseMove}
     >
       {/* Original Image */}
-      <img
-        src={getOptimizedImageUrl(src, 800)}
+      <img loading="lazy" src={getOptimizedImageUrl(src, 800)}
         alt={alt}
-        className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0"
+        className="w-full h-full object-cover transition-opacity duration-300"
       />
 
       {/* The Lens (Shadow box over the image) */}
@@ -82,7 +81,7 @@ export function ImageMagnifier({ src, alt, className, zoomLevel = 2.5 }: ImageMa
               marginLeft: "3rem", // gap
               width: "450px", // Fixed large size for the zoom result
               height: "600px",
-              backgroundImage: `url(${optimizedSrc})`,
+              backgroundImage: `url("${optimizedSrc}")`,
               backgroundRepeat: "no-repeat",
               // The background size is zoomLevel * 100% of the container size
               backgroundSize: `${zoomLevel * 100}%`,

@@ -239,7 +239,7 @@ export function AdminOfferForm() {
 
             {bannerImage ? (
               <div className="relative rounded-lg overflow-hidden group bg-secondary/10 dark:bg-dark-bg aspect-video">
-                <img src={bannerImage} alt="Banner Preview" className="w-full h-full object-cover" />
+                <img loading="lazy" src={bannerImage} alt="Banner Preview" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <button 
                     onClick={handleRemoveBanner}
@@ -405,7 +405,7 @@ export function AdminOfferForm() {
                       {/* Product image */}
                       <div className="w-12 h-12 rounded-md overflow-hidden bg-secondary/20 dark:bg-dark-bg flex-shrink-0">
                         {product.images?.[0] ? (
-                          <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+                          <img loading="lazy" src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-charcoal/20 dark:text-dark-muted text-xs">No img</div>
                         )}

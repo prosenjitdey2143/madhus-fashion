@@ -52,11 +52,12 @@ export function Navbar() {
   }, [])
 
   return (
-    <header className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full",
-        isScrolled ? "bg-brand-primary/95 backdrop-blur-md shadow-sm py-0" : "bg-transparent py-2"
-      )}
-    >
+    <>
+      <header className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-500 w-full",
+          isScrolled ? "bg-brand-primary/95 backdrop-blur-md shadow-sm py-0" : "bg-transparent py-2"
+        )}
+      >
       <div className="container mx-auto px-4 md:px-8 h-[72px] flex items-center justify-between">
         
         {/* Mobile Menu Toggle */}
@@ -124,15 +125,28 @@ export function Navbar() {
           </button>
         </div>
       </div>
+    </header>
 
       {/* Mobile Navigation Menu */}
-      <>
+      <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            <div className="fixed inset-0 bg-brand-text/20 backdrop-blur-sm z-40"
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-brand-text/20 backdrop-blur-sm z-40"
               onClick={() => setIsMobileMenuOpen(false)}
             />
-            <div className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm bg-brand-primary z-50 p-8 flex flex-col shadow-2xl overflow-y-auto"
+            {/* Slide-in Panel */}
+            <motion.div
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm bg-brand-primary z-50 p-8 flex flex-col shadow-2xl overflow-y-auto"
             >
               <div className="flex justify-between items-center mb-12">
                 <span className="text-xl font-serif text-brand-text">Menu</span>
@@ -141,39 +155,57 @@ export function Navbar() {
                 </button>
               </div>
               <nav className="flex flex-col space-y-6 text-xs uppercase tracking-[0.2em] text-brand-text/80 font-medium">
-                {NAV_LINKS.map(link => (
-                  <Link 
+                {NAV_LINKS.map((link, idx) => (
+                  <motion.div
                     key={link.name}
-                    to={link.path} 
-                    onClick={() => setIsMobileMenuOpen(false)} 
-                    className={cn(
-                      "hover:text-brand-accent transition-colors",
-                      link.highlight && "text-brand-accent"
-                    )}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.15 + idx * 0.07, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    {link.name}
-                  </Link>
+                    <Link
+                      to={link.path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        "hover:text-brand-accent transition-colors",
+                        link.highlight && "text-brand-accent"
+                      )}
+                    >
+                      {link.name}
+                    </Link>
+                  </motion.div>
                 ))}
                 
                 <div className="h-px bg-brand-text/10 my-4" />
-                
 
-                <button onClick={() => { setIsMobileMenuOpen(false); setWishlistOpen(true); }} className="flex items-center gap-3 hover:text-brand-accent text-left">
-                  <Heart className="w-4 h-4 stroke-[1.5]" /> Wishlist
-                  {wishlistIds.length > 0 && (
-                    <span className="bg-brand-accent text-white text-[10px] px-2 py-0.5 rounded-full ml-auto">
-                      {wishlistIds.length}
-                    </span>
-                  )}
-                </button>
-                <button onClick={() => { setIsMobileMenuOpen(false); setIsSearchOpen(true); }} className="flex items-center gap-3 hover:text-brand-accent text-left">
-                  <Search className="w-4 h-4 stroke-[1.5]" /> Search
-                </button>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.15 + NAV_LINKS.length * 0.07, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <button onClick={() => { setIsMobileMenuOpen(false); setWishlistOpen(true); }} className="flex items-center gap-3 hover:text-brand-accent text-left w-full">
+                    <Heart className="w-4 h-4 stroke-[1.5]" /> Wishlist
+                    {wishlistIds.length > 0 && (
+                      <span className="bg-brand-accent text-white text-[10px] px-2 py-0.5 rounded-full ml-auto">
+                        {wishlistIds.length}
+                      </span>
+                    )}
+                  </button>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.15 + (NAV_LINKS.length + 1) * 0.07, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <button onClick={() => { setIsMobileMenuOpen(false); setIsSearchOpen(true); }} className="flex items-center gap-3 hover:text-brand-accent text-left">
+                    <Search className="w-4 h-4 stroke-[1.5]" /> Search
+                  </button>
+                </motion.div>
               </nav>
-            </div>
+            </motion.div>
           </>
         )}
-      </>
+      </AnimatePresence>
       {/* Search Overlay */}
       <AnimatePresence>
         {isSearchOpen && (
@@ -214,6 +246,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   )
 }

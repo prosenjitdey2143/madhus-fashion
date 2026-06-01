@@ -113,11 +113,11 @@ export function CollectionsSection() {
             <Loader2 className="w-8 h-8 text-charcoal/30 animate-spin" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 auto-rows-[300px] md:auto-rows-[400px]">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 lg:gap-8 md:auto-rows-[400px]">
             {displayCollections.map((collection, idx) => {
               const isFeatured = idx === 0;
               const gridClasses = isFeatured 
-                ? "md:col-span-2 lg:col-span-2 row-span-2" 
+                ? "col-span-2 md:col-span-2 lg:col-span-2 lg:row-span-2" 
                 : "col-span-1 row-span-1";
 
               return (
@@ -129,51 +129,54 @@ export function CollectionsSection() {
                   transition={{ delay: idx * 0.1, duration: 0.8 }}
                   className={`group cursor-pointer relative overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-700 ${gridClasses}`}
                 >
-                  <Link to={collection.link} className="block w-full h-full relative">
-                    <img 
-                      src={collection.image} 
-                      alt={collection.title}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover transition-transform duration-[2s] ease-luxury group-hover:scale-110"
-                    />
-                    
-                    {/* Smooth Gradient overlay for text contrast */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-700 z-10" />
+                  {/* On mobile: enforce 3:4 ratio. On desktop: fill grid row height */}
+                  <div className="aspect-[3/4] md:aspect-auto md:h-full w-full relative">
+                    <Link to={collection.link} className="block w-full h-full relative">
+                      <img 
+                        src={collection.image} 
+                        alt={collection.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-full h-full object-cover transition-transform duration-[2s] ease-luxury group-hover:scale-110"
+                      />
+                      
+                      {/* Smooth Gradient overlay for text contrast */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-700 z-10" />
 
-                    {/* Top Badge for Featured */}
-                    {isFeatured && (
-                      <div className="absolute top-6 left-6 z-20">
-                        <span className="bg-accent text-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest rounded-full shadow-md">
-                          Featured Selection
-                        </span>
-                      </div>
-                    )}
+                      {/* Top Badge for Featured */}
+                      {isFeatured && (
+                        <div className="absolute top-6 left-6 z-20">
+                          <span className="bg-accent text-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest rounded-full shadow-md">
+                            Featured Selection
+                          </span>
+                        </div>
+                      )}
 
-                    {/* Content Box (No Glassmorphism) */}
-                    <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end p-6 md:p-8">
-                      <div className="transform transition-transform duration-500 group-hover:-translate-y-2">
-                        <div className="flex justify-between items-end gap-4">
-                          <div className="flex-1">
-                            <h3 className={`font-serif text-white mb-2 ${isFeatured ? 'text-3xl md:text-5xl' : 'text-xl md:text-2xl'}`}>
-                              {collection.title}
-                            </h3>
-                            {isFeatured && (
-                              <p className="text-white/90 text-sm md:text-base font-light max-w-md hidden md:block mt-4">
-                                {collection.description}
-                              </p>
-                            )}
-                          </div>
-                          
-                          {/* Animated Button */}
-                          <div className="bg-white text-charcoal p-3 md:px-6 md:py-3 rounded-full opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 flex items-center justify-center gap-2 whitespace-nowrap shadow-lg hover:bg-charcoal hover:text-white">
-                            <span className="hidden md:inline text-xs font-bold uppercase tracking-wider">Shop Now</span>
-                            <ArrowRight className="w-5 h-5 stroke-[2]" />
+                      {/* Content Box */}
+                      <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col justify-end p-4 md:p-8">
+                        <div className="transform transition-transform duration-500 group-hover:-translate-y-2">
+                          <div className="flex justify-between items-end gap-4">
+                            <div className="flex-1">
+                              <h3 className={`font-serif text-white mb-2 ${isFeatured ? 'text-xl md:text-5xl' : 'text-base md:text-2xl'}`}>
+                                {collection.title}
+                              </h3>
+                              {isFeatured && (
+                                <p className="text-white/90 text-sm md:text-base font-light max-w-md hidden md:block mt-4">
+                                  {collection.description}
+                                </p>
+                              )}
+                            </div>
+                            
+                            {/* Animated Button */}
+                            <div className="bg-white text-charcoal p-3 md:px-6 md:py-3 rounded-full opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 flex items-center justify-center gap-2 whitespace-nowrap shadow-lg hover:bg-charcoal hover:text-white">
+                              <span className="hidden md:inline text-xs font-bold uppercase tracking-wider">Shop Now</span>
+                              <ArrowRight className="w-5 h-5 stroke-[2]" />
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
                 </motion.div>
               );
             })}

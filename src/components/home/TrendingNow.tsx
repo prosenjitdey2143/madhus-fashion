@@ -175,8 +175,7 @@ export function TrendingNow() {
                 {/* Main Image Container */}
                 <div className="aspect-[4/5] w-full overflow-hidden rounded-sm bg-brand-pale shadow-soft group-hover:shadow-float transition-all duration-1000 ease-luxury relative z-10">
                   <div className="absolute inset-0 bg-brand-text/5 group-hover:bg-brand-text/15 transition-colors duration-[1.5s] ease-luxury z-10" />
-                  <img 
-                    src={card2.mainImage} 
+                  <img loading="lazy" src={card2.mainImage} 
                     alt={card2.title} 
                     className="w-full h-full object-cover transition-transform duration-[2s] ease-luxury group-hover:scale-[1.03]"
                   />
@@ -189,8 +188,7 @@ export function TrendingNow() {
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
                   >
-                    <img 
-                      src={card2.textureImage}
+                    <img loading="lazy" src={card2.textureImage}
                       alt={`${card2.title} Detail`}
                       className="w-full h-full object-cover transition-transform duration-[2s] ease-luxury group-hover:scale-105"
                     />

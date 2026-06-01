@@ -1,8 +1,10 @@
 import { cn } from "../utils/utils";
 
-export function Skeleton({ className }: { className?: string }) {
+export function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("bg-secondary/20 rounded-sm w-full h-full", className)}
+    <div 
+      className={cn("animate-pulse bg-secondary/10 dark:bg-dark-border/50 rounded-sm w-full h-full", className)}
+      {...props}
     />
   );
 }
@@ -20,6 +22,15 @@ export function ProductCardSkeleton() {
         </div>
         <Skeleton className="h-5 w-16" />
       </div>
+    </div>
+  );
+}
+
+export function CategorySkeleton() {
+  return (
+    <div className="flex flex-col items-center justify-center space-y-4">
+      <Skeleton className="w-24 h-24 rounded-full" />
+      <Skeleton className="w-16 h-4" />
     </div>
   );
 }

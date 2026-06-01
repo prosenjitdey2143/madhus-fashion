@@ -199,7 +199,7 @@ export function AdminCollectionForm() {
 
             {image ? (
               <div className="relative rounded-xl overflow-hidden group bg-secondary/10 dark:bg-dark-pill w-full aspect-[4/5] max-w-sm mx-auto border border-charcoal/10 dark:border-dark-border">
-                <img src={image} alt="Collection Preview" className="w-full h-full object-cover" />
+                <img loading="lazy" src={image} alt="Collection Preview" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-charcoal/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <button 
                     onClick={handleRemoveImage}

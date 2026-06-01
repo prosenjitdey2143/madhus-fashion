@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
-import { ArrowRight, Loader2, ChevronLeft, ChevronRight } from "lucide-react"
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { categoryService } from "../../services/firebase/categoryService"
+import { CategorySkeleton } from "../../ui/Skeleton"
 
 export function ShopByCategory() {
   const [categories, setCategories] = useState<any[]>([])
@@ -58,13 +59,17 @@ export function ShopByCategory() {
         {/* Circular Categories Grid/Scroll */}
         <div 
           ref={sliderRef}
-          className="flex overflow-x-auto pb-8 gap-6 md:gap-8 scrollbar-hide snap-x relative min-h-[200px] -mx-4 px-4 md:mx-0 md:px-0"
+          className="flex overflow-x-auto pb-8 gap-6 md:gap-8 scrollbar-hide snap-x relative min-h-[200px]"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {loading ? (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Loader2 className="w-8 h-8 text-charcoal/30 animate-spin" />
-            </div>
+            <>
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="flex-shrink-0 w-[140px] md:w-[180px] snap-start">
+                  <CategorySkeleton />
+                </div>
+              ))}
+            </>
           ) : displayCategories.map((category, idx) => (
             <motion.div 
               key={category.id || category.title}

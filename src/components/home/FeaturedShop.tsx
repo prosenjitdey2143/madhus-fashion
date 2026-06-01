@@ -106,7 +106,7 @@ export function FeaturedShop() {
             ref={sliderRef}
             className={`flex ${
               isSlider 
-                ? "overflow-x-auto scrollbar-hide snap-x relative -mx-4 px-4 md:mx-0 md:px-0" 
+                ? "overflow-x-auto scrollbar-hide snap-x relative" 
                 : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
             } gap-8 pb-8`}
             style={isSlider ? { scrollbarWidth: 'none', msOverflowStyle: 'none' } : undefined}

@@ -13,6 +13,7 @@ import { ImageMagnifier } from "../ui/ImageMagnifier"
 import { useRecentlyViewed } from "../hooks/useRecentlyViewed"
 import { RecentlyViewed } from "../components/products/RecentlyViewed"
 import { ResponsiveImage } from "../ui/ResponsiveImage"
+import { Skeleton } from "../ui/Skeleton"
 
 export function ProductDetails() {
   const { id } = useParams()
@@ -124,13 +125,13 @@ export function ProductDetails() {
       <div className="container mx-auto px-4 md:px-8 py-12 md:py-32 max-w-7xl min-h-screen pt-[120px]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           <div className="lg:col-span-7 flex flex-col gap-4">
-             <div className="aspect-[3/4] w-full bg-brand-pale animate-pulse"></div>
+             <Skeleton className="aspect-[3/4] w-full" />
           </div>
           <div className="lg:col-span-5 flex flex-col space-y-6 pt-8">
-             <div className="w-3/4 h-12 bg-brand-pale animate-pulse" />
-             <div className="w-1/4 h-6 bg-brand-pale animate-pulse" />
-             <div className="w-full h-32 bg-brand-pale animate-pulse mt-8" />
-             <div className="w-full h-12 bg-brand-pale animate-pulse mt-8" />
+             <Skeleton className="w-3/4 h-12" />
+             <Skeleton className="w-1/4 h-6" />
+             <Skeleton className="w-full h-32 mt-8" />
+             <Skeleton className="w-full h-12 mt-8" />
           </div>
         </div>
       </div>

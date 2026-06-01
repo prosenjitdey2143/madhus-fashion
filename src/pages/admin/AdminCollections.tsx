@@ -124,7 +124,7 @@ export function AdminCollections() {
                       <div className="flex items-center gap-4">
                         <div className="w-16 h-20 bg-secondary/20 dark:bg-dark-bg rounded overflow-hidden flex-shrink-0">
                           {col.image && (
-                            <img src={col.image} alt={col.title} className="w-full h-full object-cover" />
+                            <img loading="lazy" src={col.image} alt={col.title} className="w-full h-full object-cover" />
                           )}
                         </div>
                         <div>
@@ -200,7 +200,7 @@ export function AdminCollections() {
               </div>
 
               <div className="bg-secondary/10 dark:bg-dark-pill p-4 rounded-lg mb-8 flex items-center gap-4">
-                <img src={collectionToDelete.image} alt="" className="w-12 h-16 object-cover rounded" />
+                <img loading="lazy" src={collectionToDelete.image} alt="" className="w-12 h-16 object-cover rounded" />
                 <div>
                   <p className="font-medium text-charcoal dark:text-dark-text">{collectionToDelete.title}</p>
                 </div>

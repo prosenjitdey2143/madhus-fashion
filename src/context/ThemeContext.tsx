@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -24,12 +24,14 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('admin-theme', theme);
   }, [theme]);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
+  }, []);
+
+  const value = useMemo(() => ({ theme, toggleTheme }), [theme, toggleTheme]);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={value}>
       {/* We apply the dark class to a wrapper div here if we want it isolated, or we let the AdminLayout do it. 
           It's better to let AdminLayout do it so we don't disrupt the DOM structure here. */}
       {children}

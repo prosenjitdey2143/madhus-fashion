@@ -32,7 +32,7 @@ export function RecentlyViewed({ currentProductId }: RecentlyViewedProps) {
         </div>
 
         {/* Scrollable container on mobile, grid on desktop */}
-        <div className="flex overflow-x-auto pb-8 -mx-6 px-6 md:mx-0 md:px-0 md:grid md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8 snap-x md:snap-none hide-scrollbar">
+        <div className="flex overflow-x-auto pb-8 md:grid md:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8 snap-x md:snap-none hide-scrollbar">
           {itemsToShow.map((item) => (
             <div key={item.id} className="w-[70vw] md:w-auto flex-shrink-0 snap-start">
               <ProductCard

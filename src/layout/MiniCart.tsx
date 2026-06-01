@@ -69,7 +69,7 @@ export function MiniCart() {
                     {items.map(item => (
                       <div key={item.id} className="flex gap-4 p-4 border border-brand-text/5 bg-brand-pale/30 shadow-soft rounded-sm">
                         <div className="w-20 aspect-[3/4] bg-secondary/10 flex-shrink-0 overflow-hidden">
-                          <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                          <img loading="lazy" src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
                         </div>
                         <div className="flex flex-col justify-between flex-1 py-1">
                           <div>

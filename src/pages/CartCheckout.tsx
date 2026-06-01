@@ -112,8 +112,8 @@ export function Cart() {
         description="Review your luxury fashion selections before checkout."
         noindex={true}
       />
-      <div className="container mx-auto px-4 md:px-8 py-16 max-w-[1400px]">
-        <h1 className="text-3xl lg:text-5xl font-serif text-brand-text mb-16">Shopping Bag</h1>
+      <div className="container mx-auto px-4 md:px-8 pt-6 pb-16 md:py-16 max-w-[1400px]">
+        <h1 className="text-3xl lg:text-5xl font-serif text-brand-text mb-6 md:mb-16">Shopping Bag</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
           <div className="lg:col-span-7 xl:col-span-8">
@@ -129,7 +129,7 @@ export function Cart() {
                           SALE
                         </div>
                       )}
-                      <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                      <img loading="lazy" src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     </Link>
                     <div className="flex flex-col justify-between flex-grow">
                       <div className="flex justify-between items-start">
@@ -401,10 +401,10 @@ export function Checkout() {
 
   return (
     <div className="bg-brand-primary pt-[104px] min-h-screen">
-      <div className="container mx-auto px-4 py-12 md:py-16 max-w-[1400px]">
+      <div className="container mx-auto px-4 pt-4 pb-12 md:py-16 max-w-[1400px]">
         <SEO title="Secure Checkout" noindex={true} />
         
-        <div className="flex items-center gap-4 mb-16 text-[10px] uppercase tracking-[0.2em]">
+        <div className="flex items-center gap-4 mb-3 md:mb-16 text-[10px] uppercase tracking-[0.2em]">
           <Link to="/cart" className="text-brand-text/50 hover:text-brand-text transition-colors">Bag</Link>
           <span className="text-brand-text/30">/</span>
           <span className="text-brand-text font-medium">Checkout</span>
@@ -413,7 +413,7 @@ export function Checkout() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
           {/* Left Column: Form */}
           <div className="lg:col-span-7 xl:col-span-8">
-            <h1 className="text-3xl lg:text-4xl font-serif text-brand-text mb-12">Checkout</h1>
+            <h1 className="text-3xl lg:text-4xl font-serif text-brand-text mb-3 md:mb-12">Checkout</h1>
             
             <form onSubmit={handleCheckout} className="space-y-16">
               
@@ -566,7 +566,7 @@ export function Checkout() {
                       <div className="absolute -top-2 -right-2 w-5 h-5 bg-brand-text text-brand-primary text-[10px] flex items-center justify-center z-10">
                         {item.quantity}
                       </div>
-                      <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+                      <img loading="lazy" src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex flex-col justify-center flex-grow">
                       <h3 className="font-serif text-[15px] text-brand-text line-clamp-1">{item.name}</h3>

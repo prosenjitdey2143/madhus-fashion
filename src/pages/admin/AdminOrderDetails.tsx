@@ -280,7 +280,7 @@ export function AdminOrderDetails() {
                     className="w-20 h-24 bg-secondary/20 dark:bg-dark-bg rounded flex-shrink-0 relative overflow-hidden border border-charcoal/5 dark:border-dark-border group cursor-zoom-in"
                     title="Click to enlarge image"
                   >
-                    <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    <img loading="lazy" src={item.imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                     <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/20 transition-colors flex items-center justify-center">
                       <ZoomIn className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
@@ -529,8 +529,7 @@ export function AdminOrderDetails() {
           onClick={() => setPreviewImage(null)}
         >
           <div className="relative inline-block max-w-[90vw] max-h-[90vh]">
-            <img 
-              src={previewImage} 
+            <img loading="lazy" src={previewImage} 
               alt="Product Preview" 
               className="max-w-full max-h-[90vh] object-contain rounded shadow-2xl bg-white dark:bg-dark-surface"
               onClick={(e) => e.stopPropagation()} 

@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { useProducts } from "../hooks/useProducts"
 import { trendingService } from "../services/firebase/trendingService"
 import type { TrendingSettings, TrendingCard } from "../types"
+import { ProductCardSkeleton } from "../ui/Skeleton"
 
 export function Products() {
   const { products, loading, error } = useProducts()
@@ -247,10 +248,8 @@ export function Products() {
           ) : loading || loadingTrending ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 lg:gap-x-8 gap-y-16">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="bg-brand-pale aspect-[3/4] mb-4 w-full rounded-md"></div>
-                  <div className="h-3 bg-brand-pale w-1/2 mb-3 rounded"></div>
-                  <div className="h-3 bg-brand-pale w-1/4 rounded"></div>
+                <div key={i} className="w-full">
+                  <ProductCardSkeleton />
                 </div>
               ))}
             </div>

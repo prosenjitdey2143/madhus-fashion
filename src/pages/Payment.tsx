@@ -210,7 +210,7 @@ export function Payment() {
                 <div className="absolute -top-2 -right-2 w-5 h-5 bg-charcoal text-primary text-xs rounded-full flex items-center justify-center font-medium z-10 shadow-sm">
                   {item.quantity}
                 </div>
-                <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover rounded" />
+                <img loading="lazy" src={item.imageUrl} alt={item.name} className="w-full h-full object-cover rounded" />
               </div>
               <div className="flex-1">
                 <h3 className="text-sm font-medium text-charcoal line-clamp-1">{item.name}</h3>
@@ -298,7 +298,7 @@ export function Payment() {
           {/* QR Code */}
           <div className="flex-shrink-0">
             {qrCodeUrl ? (
-              <img src={qrCodeUrl} alt="UPI QR Code" className="w-48 h-48 object-contain border border-charcoal/20 rounded bg-white p-2" />
+              <img loading="lazy" src={qrCodeUrl} alt="UPI QR Code" className="w-48 h-48 object-contain border border-charcoal/20 rounded bg-white p-2" />
             ) : (
               <div className="w-48 h-48 border border-charcoal/20 border-dashed rounded bg-secondary/5 flex flex-col items-center justify-center text-charcoal/40">
                 <QrCode className="w-8 h-8 mb-2 opacity-50" />

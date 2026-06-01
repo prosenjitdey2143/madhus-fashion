@@ -124,7 +124,7 @@ export function AdminInventory() {
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-12 bg-secondary/20 dark:bg-dark-bg rounded overflow-hidden flex-shrink-0">
                           {product.images?.[0] && (
-                            <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+                            <img loading="lazy" src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
                           )}
                         </div>
                         <p className="font-medium text-charcoal dark:text-dark-text text-sm">{product.name}</p>

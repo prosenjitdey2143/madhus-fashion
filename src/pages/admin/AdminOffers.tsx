@@ -130,7 +130,7 @@ export function AdminOffers() {
                       <div className="flex items-center gap-4">
                         <div className="w-24 h-12 bg-secondary/20 dark:bg-dark-bg rounded overflow-hidden flex-shrink-0">
                           {offer.bannerImage && (
-                            <img src={offer.bannerImage} alt={offer.title} className="w-full h-full object-cover" />
+                            <img loading="lazy" src={offer.bannerImage} alt={offer.title} className="w-full h-full object-cover" />
                           )}
                         </div>
                         <div>
@@ -204,7 +204,7 @@ export function AdminOffers() {
               </div>
 
               <div className="bg-secondary/10 dark:bg-dark-pill p-4 rounded-lg mb-8 flex items-center gap-4">
-                <img src={offerToDelete.bannerImage} alt="" className="w-20 h-10 object-cover rounded" />
+                <img loading="lazy" src={offerToDelete.bannerImage} alt="" className="w-20 h-10 object-cover rounded" />
                 <div>
                   <p className="font-medium text-charcoal dark:text-dark-text text-sm">{offerToDelete.title}</p>
                 </div>

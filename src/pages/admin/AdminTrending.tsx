@@ -256,7 +256,7 @@ export function AdminTrending() {
                   <label className="text-xs text-charcoal/60 dark:text-dark-muted">Main Image</label>
                   {card.mainImage && (
                     <div className="w-full h-32 rounded bg-charcoal/5 dark:bg-dark-bg overflow-hidden mb-2">
-                      <img src={card.mainImage} className="w-full h-full object-cover" alt="Main" />
+                      <img loading="lazy" src={card.mainImage} className="w-full h-full object-cover" alt="Main" />
                     </div>
                   )}
                   <ImageUploader 
@@ -271,7 +271,7 @@ export function AdminTrending() {
                   <label className="text-xs text-charcoal/60 dark:text-dark-muted">Detail/Texture Image</label>
                   {card.textureImage && (
                     <div className="w-full h-32 rounded bg-charcoal/5 dark:bg-dark-bg overflow-hidden mb-2">
-                      <img src={card.textureImage} className="w-full h-full object-cover" alt="Texture" />
+                      <img loading="lazy" src={card.textureImage} className="w-full h-full object-cover" alt="Texture" />
                     </div>
                   )}
                   <ImageUploader 
@@ -327,7 +327,7 @@ export function AdminTrending() {
                       </div>
                       
                       <div className="w-8 h-8 rounded bg-secondary/20 dark:bg-dark-bg shrink-0 overflow-hidden">
-                        {product.images?.[0] && <img src={product.images[0]} className="w-full h-full object-cover" />}
+                        {product.images?.[0] && <img loading="lazy" src={product.images[0]} className="w-full h-full object-cover" />}
                       </div>
                       
                       <div className="min-w-0 flex-1">

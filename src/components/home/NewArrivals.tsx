@@ -4,6 +4,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { useProducts } from "../../hooks/useProducts"
 import { ProductCard } from "../../ui/ProductCard"
+import { ProductCardSkeleton } from "../../ui/Skeleton"
 
 // Staggered animation variants
 const containerVariants = {
@@ -100,10 +101,8 @@ export function NewArrivals() {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-secondary/20 rounded-md aspect-[3/4] mb-4 w-full"></div>
-                <div className="h-4 bg-secondary/20 rounded w-2/3 mb-2"></div>
-                <div className="h-4 bg-secondary/20 rounded w-1/3"></div>
+              <div key={i} className="w-full">
+                <ProductCardSkeleton />
               </div>
             ))}
           </div>
@@ -112,7 +111,7 @@ export function NewArrivals() {
             ref={sliderRef}
             className={`flex ${
               isSlider 
-                ? "overflow-x-auto scrollbar-hide snap-x relative -mx-4 px-4 md:mx-0 md:px-0" 
+                ? "overflow-x-auto scrollbar-hide snap-x relative" 
                 : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
             } gap-8 pb-8`}
             style={isSlider ? { scrollbarWidth: 'none', msOverflowStyle: 'none' } : undefined}

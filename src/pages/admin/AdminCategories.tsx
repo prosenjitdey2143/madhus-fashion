@@ -124,7 +124,7 @@ export function AdminCategories() {
                       <div className="flex items-center gap-4">
                         <div className="w-16 h-16 bg-secondary/20 dark:bg-dark-bg rounded-full overflow-hidden flex-shrink-0">
                           {category.image && (
-                            <img src={category.image} alt={category.title} className="w-full h-full object-cover" />
+                            <img loading="lazy" src={category.image} alt={category.title} className="w-full h-full object-cover" />
                           )}
                         </div>
                         <div>
@@ -200,7 +200,7 @@ export function AdminCategories() {
               </div>
 
               <div className="bg-secondary/10 dark:bg-dark-pill p-4 rounded-lg mb-8 flex items-center gap-4">
-                <img src={categoryToDelete.image} alt="" className="w-12 h-12 rounded-full object-cover" />
+                <img loading="lazy" src={categoryToDelete.image} alt="" className="w-12 h-12 rounded-full object-cover" />
                 <div>
                   <p className="font-medium text-charcoal dark:text-dark-text">{categoryToDelete.title}</p>
                 </div>

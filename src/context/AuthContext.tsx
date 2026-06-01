@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import type { UserProfile } from '../types';
 import { authService } from '../services/firebase/authService';
 
@@ -28,12 +28,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = user?.email === "prosenjitdey2143@gmail.com" || user?.email === import.meta.env.VITE_ADMIN_EMAIL;
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     await authService.logout();
-  };
+  }, []);
+
+  const value = useMemo(() => ({
+    user, setUser, isLoading, isAdmin, logout
+  }), [user, isLoading, isAdmin, logout]);
 
   return (
-    <AuthContext.Provider value={{ user, setUser, isLoading, isAdmin, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

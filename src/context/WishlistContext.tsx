@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react"
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from "react"
 
 interface WishlistContextType {
   wishlistIds: string[];
@@ -33,41 +33,43 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("madhus_wishlist", JSON.stringify(wishlistIds))
   }, [wishlistIds])
 
-  const addToWishlist = (productId: string) => {
+  const addToWishlist = useCallback((productId: string) => {
     setWishlistIds(prev => {
       if (prev.includes(productId)) return prev
       return [...prev, productId]
     })
-  }
+  }, [])
 
-  const removeFromWishlist = (productId: string) => {
+  const removeFromWishlist = useCallback((productId: string) => {
     setWishlistIds(prev => prev.filter(id => id !== productId))
-  }
+  }, [])
 
-  const isInWishlist = (productId: string) => {
+  const isInWishlist = useCallback((productId: string) => {
     return wishlistIds.includes(productId)
-  }
+  }, [wishlistIds])
 
-  const toggleWishlist = (productId: string) => {
-    if (isInWishlist(productId)) {
-      removeFromWishlist(productId)
-    } else {
-      addToWishlist(productId)
-    }
-  }
+  const toggleWishlist = useCallback((productId: string) => {
+    setWishlistIds(prev => {
+      if (prev.includes(productId)) {
+        return prev.filter(id => id !== productId)
+      } else {
+        return [...prev, productId]
+      }
+    })
+  }, [])
+
+  const contextValue = useMemo(() => ({
+    wishlistIds,
+    addToWishlist,
+    removeFromWishlist,
+    isInWishlist,
+    toggleWishlist,
+    isWishlistOpen,
+    setWishlistOpen
+  }), [wishlistIds, addToWishlist, removeFromWishlist, isInWishlist, toggleWishlist, isWishlistOpen])
 
   return (
-    <WishlistContext.Provider
-      value={{
-        wishlistIds,
-        addToWishlist,
-        removeFromWishlist,
-        isInWishlist,
-        toggleWishlist,
-        isWishlistOpen,
-        setWishlistOpen
-      }}
-    >
+    <WishlistContext.Provider value={contextValue}>
       {children}
     </WishlistContext.Provider>
   )

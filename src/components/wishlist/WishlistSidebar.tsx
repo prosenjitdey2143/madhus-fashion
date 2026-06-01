@@ -89,7 +89,7 @@ export function WishlistSidebar() {
                     className="w-24 aspect-[3/4] shrink-0 bg-secondary/10 overflow-hidden"
                   >
                     {product.images?.[0] && (
-                      <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                      <img loading="lazy" src={product.images[0]} alt={product.name} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                     )}
                   </Link>
                   
