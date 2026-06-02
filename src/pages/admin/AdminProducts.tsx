@@ -18,6 +18,10 @@ export function AdminProducts() {
   const [searchTerm, setSearchTerm] = useState("")
   const [productToDelete, setProductToDelete] = useState<Product | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
+  
+  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set())
+  const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false)
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false)
 
   const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -32,17 +36,38 @@ export function AdminProducts() {
       await productService.deleteProduct(productToDelete.id, productToDelete.images)
       toast(`${productToDelete.name} deleted successfully`, "success")
       setProductToDelete(null)
-      // Note: we don't need to manually refetch, as long as useProducts triggers a reload, 
-      // but standard Firestore getDocs doesn't auto-sync unless we use onSnapshot.
-      // Since useProducts uses one-time getDocs, a page refresh or forcing a fetch would be needed.
-      // For now, removing it from DOM implicitly might require a hard reload or context update.
-      window.location.reload() // Quick fix for full CRUD sync without heavy state management overhaul
+      window.location.reload()
     } catch (err) {
       console.error(err)
       toast("Failed to delete product. Please try again.", "error")
     } finally {
       setIsDeleting(false)
     }
+  }
+
+  const handleBulkDeleteConfirm = async () => {
+    if (selectedProducts.size === 0) return;
+    setIsBulkDeleting(true);
+    try {
+      const productsToDelete = products.filter(p => selectedProducts.has(p.id));
+      await Promise.all(productsToDelete.map(p => productService.deleteProduct(p.id, p.images)));
+      toast(`Successfully deleted ${selectedProducts.size} products.`, "success");
+      setSelectedProducts(new Set());
+      setShowBulkDeleteModal(false);
+      window.location.reload();
+    } catch (err) {
+      console.error(err);
+      toast("Failed to delete some products. Please try again.", "error");
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  }
+
+  const toggleSelect = (id: string) => {
+    const newSet = new Set(selectedProducts);
+    if (newSet.has(id)) newSet.delete(id);
+    else newSet.add(id);
+    setSelectedProducts(newSet);
   }
 
   return (
@@ -74,8 +99,20 @@ export function AdminProducts() {
               className="w-full pl-9 pr-4 py-2 text-sm bg-white dark:bg-dark-bg border border-charcoal/10 dark:border-dark-border rounded-lg focus:outline-none focus:border-charcoal/30 dark:focus:border-dark-surfaceHover dark:text-dark-text dark:placeholder:text-dark-muted/60 transition-colors"
             />
           </div>
-          <div className="text-sm text-charcoal/60 dark:text-dark-muted font-medium">
-            {filteredProducts.length} Items
+          <div className="flex items-center gap-4">
+            {selectedProducts.size > 0 && (
+              <Button 
+                variant="outline"
+                className="text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-900/50 dark:hover:bg-red-500/10 text-sm h-9"
+                onClick={() => setShowBulkDeleteModal(true)}
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete Selected ({selectedProducts.size})
+              </Button>
+            )}
+            <div className="text-sm text-charcoal/60 dark:text-dark-muted font-medium">
+              {filteredProducts.length} Items
+            </div>
           </div>
         </div>
 
@@ -84,6 +121,20 @@ export function AdminProducts() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-charcoal/5 dark:bg-dark-pill border-b border-charcoal/10 dark:border-dark-border text-xs uppercase tracking-wider text-charcoal/50 dark:text-dark-muted">
+                <th className="px-6 py-4 font-semibold w-12">
+                  <input 
+                    type="checkbox" 
+                    className="w-4 h-4 accent-charcoal dark:accent-dark-text rounded border-charcoal/20"
+                    checked={filteredProducts.length > 0 && selectedProducts.size === filteredProducts.length}
+                    onChange={() => {
+                      if (filteredProducts.length > 0 && selectedProducts.size === filteredProducts.length) {
+                        setSelectedProducts(new Set());
+                      } else {
+                        setSelectedProducts(new Set(filteredProducts.map(p => p.id)));
+                      }
+                    }}
+                  />
+                </th>
                 <th className="px-6 py-4 font-semibold">Product</th>
                 <th className="px-6 py-4 font-semibold">Category</th>
                 <th className="px-6 py-4 font-semibold">Price</th>
@@ -97,6 +148,7 @@ export function AdminProducts() {
                 // Loading Skeletons
                 Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i}>
+                    <td className="px-6 py-4"><Skeleton className="w-4 h-4 rounded" /></td>
                     <td className="px-6 py-4"><Skeleton className="w-full h-12" /></td>
                     <td className="px-6 py-4"><Skeleton className="w-24 h-4" /></td>
                     <td className="px-6 py-4"><Skeleton className="w-16 h-4" /></td>
@@ -107,13 +159,13 @@ export function AdminProducts() {
                 ))
               ) : error ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-red-600">
+                  <td colSpan={7} className="px-6 py-12 text-center text-red-600">
                     Failed to load products. Check your connection.
                   </td>
                 </tr>
               ) : filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-16 text-center">
+                  <td colSpan={7} className="px-6 py-16 text-center">
                     <div className="flex flex-col items-center justify-center">
                       <div className="w-16 h-16 bg-secondary/20 dark:bg-dark-pill rounded-full flex items-center justify-center mb-4">
                         <AlertTriangle className="w-8 h-8 text-charcoal/40 dark:text-dark-muted" />
@@ -130,6 +182,14 @@ export function AdminProducts() {
                   <tr 
                     key={product.id} className="hover:bg-secondary/5 dark:hover:bg-dark-surfaceHover transition-colors group"
                   >
+                    <td className="px-6 py-4">
+                      <input 
+                        type="checkbox" 
+                        className="w-4 h-4 accent-charcoal dark:accent-dark-text rounded border-charcoal/20"
+                        checked={selectedProducts.has(product.id)}
+                        onChange={() => toggleSelect(product.id)}
+                      />
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-16 bg-secondary/20 dark:bg-dark-bg rounded overflow-hidden flex-shrink-0">
@@ -186,7 +246,7 @@ export function AdminProducts() {
         </div>
       </AdminCard>
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Single Product Confirmation Modal */}
       <>
         {productToDelete && (
           <>
@@ -236,6 +296,64 @@ export function AdminProducts() {
                   disabled={isDeleting}
                 >
                   {isDeleting ? "Deleting..." : "Permanently Delete"}
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
+      </>
+
+      {/* Bulk Delete Confirmation Modal */}
+      <>
+        {showBulkDeleteModal && (
+          <>
+            <div className="fixed inset-0 bg-charcoal/30 backdrop-blur-sm z-50"
+              onClick={() => !isBulkDeleting && setShowBulkDeleteModal(false)}
+            />
+            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-dark-surface rounded-xl shadow-2xl z-50 p-6 overflow-hidden"
+            >
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 rounded-full">
+                    <AlertTriangle className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-serif text-charcoal dark:text-dark-text">Bulk Delete Products</h3>
+                    <p className="text-sm text-charcoal/60 dark:text-dark-muted mt-1">This action cannot be undone.</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => !isBulkDeleting && setShowBulkDeleteModal(false)}
+                  className="text-charcoal/40 dark:text-dark-muted hover:text-charcoal dark:hover:text-dark-text transition-colors p-1"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="bg-secondary/10 dark:bg-dark-pill p-4 rounded-lg mb-8">
+                <p className="font-medium text-charcoal dark:text-dark-text mb-1">
+                  You are about to delete {selectedProducts.size} product{selectedProducts.size !== 1 ? 's' : ''}.
+                </p>
+                <p className="text-sm text-charcoal/60 dark:text-dark-muted">
+                  All images associated with these products will also be permanently deleted from storage.
+                </p>
+              </div>
+
+              <div className="flex gap-4">
+                <Button 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => setShowBulkDeleteModal(false)}
+                  disabled={isBulkDeleting}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  className="flex-1 bg-red-600 text-white hover:bg-red-700"
+                  onClick={handleBulkDeleteConfirm}
+                  disabled={isBulkDeleting}
+                >
+                  {isBulkDeleting ? "Deleting..." : `Delete ${selectedProducts.size} Items`}
                 </Button>
               </div>
             </div>
