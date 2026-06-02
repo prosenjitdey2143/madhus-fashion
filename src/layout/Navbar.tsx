@@ -70,7 +70,11 @@ export function Navbar() {
 
         {/* Logo */}
         <Link to="/" className="flex flex-col items-center lg:items-start justify-center absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0">
-          <span className="text-xl sm:text-2xl lg:text-3xl font-serif text-brand-text tracking-tight leading-none whitespace-nowrap">Madhus Fashion House</span>
+          <img 
+            src="/logo.png" 
+            alt="Madhus Fashion House" 
+            className="h-10 md:h-12 w-auto object-contain mix-blend-multiply"
+          />
         </Link>
 
         {/* Desktop Navigation */}
