@@ -14,7 +14,7 @@ import { cn } from "../../utils/utils"
 import { ImageUploader } from "../../ui/admin/ImageUploader"
 
 const CATEGORIES = ["Dresses", "Gowns", "Outerwear", "Tops", "Bottoms", "Accessories"]
-const SIZES = ["One Size", "XS", "S", "M", "L", "XL", "XXL"]
+const SIZES = ["One Size", "XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"]
 
 import { collectionService } from "../../services/firebase/collectionService"
 

@@ -303,7 +303,7 @@ export function ProductDetails() {
                   </button>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
-                  {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => {
+                  {['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL', '4XL', '5XL'].map((size) => {
                     const isAvailable = product.sizes.includes(size);
                     const isSelected = selectedSize === size;
                     
@@ -435,11 +435,29 @@ export function ProductDetails() {
                       <td className="py-3">34</td>
                       <td className="py-3">44</td>
                     </tr>
-                    <tr>
+                    <tr className="border-b border-brand-text/10">
                       <td className="py-3 font-bold text-brand-text">XXL</td>
                       <td className="py-3">42</td>
                       <td className="py-3">36</td>
                       <td className="py-3">46</td>
+                    </tr>
+                    <tr className="border-b border-brand-text/10">
+                      <td className="py-3 font-bold text-brand-text">3XL</td>
+                      <td className="py-3">44</td>
+                      <td className="py-3">38</td>
+                      <td className="py-3">48</td>
+                    </tr>
+                    <tr className="border-b border-brand-text/10">
+                      <td className="py-3 font-bold text-brand-text">4XL</td>
+                      <td className="py-3">46</td>
+                      <td className="py-3">40</td>
+                      <td className="py-3">50</td>
+                    </tr>
+                    <tr>
+                      <td className="py-3 font-bold text-brand-text">5XL</td>
+                      <td className="py-3">48</td>
+                      <td className="py-3">42</td>
+                      <td className="py-3">52</td>
                     </tr>
                   </tbody>
                 </table>
