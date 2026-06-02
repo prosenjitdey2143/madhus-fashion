@@ -66,11 +66,11 @@ export function Footer() {
           
           {/* Brand Story */}
           <div className="md:col-span-12 lg:col-span-4">
-            <Link to="/" className="inline-block mb-8 bg-brand-primary/95 p-4 rounded-xl shadow-soft">
+            <Link to="/" className="inline-block mb-8">
               <img 
                 src="/logo.png" 
                 alt="Madhus Fashion House" 
-                className="h-10 md:h-12 w-auto object-contain"
+                className="h-10 md:h-12 w-auto object-contain brightness-[2] drop-shadow-md"
               />
             </Link>
             <p className="text-brand-primary/60 text-sm leading-relaxed max-w-sm mb-8 font-light">
