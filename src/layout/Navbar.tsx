@@ -73,7 +73,7 @@ export function Navbar() {
           <img 
             src="/logo.png" 
             alt="Madhus Fashion House" 
-            className="h-10 md:h-12 w-auto object-contain mix-blend-multiply"
+            className="h-16 md:h-24 lg:h-28 w-auto object-contain mix-blend-multiply scale-125 lg:scale-150 origin-left lg:origin-center"
           />
         </Link>
 
