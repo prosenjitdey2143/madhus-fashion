@@ -70,7 +70,7 @@ export function Footer() {
               <img 
                 src="/logo.png" 
                 alt="Madhus Fashion House" 
-                className="h-10 md:h-12 w-auto object-contain brightness-[2] drop-shadow-md"
+                className="h-14 md:h-16 lg:h-20 w-auto object-contain brightness-[2] drop-shadow-md origin-left"
               />
             </Link>
             <p className="text-brand-primary/60 text-sm leading-relaxed max-w-sm mb-8 font-light">
