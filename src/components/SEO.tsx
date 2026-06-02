@@ -12,9 +12,9 @@ interface SEOProps {
 }
 
 export function SEO({ 
-  title = "Madhus Fashion | Luxury Class & Style", 
+  title = "Madhus Fashion House | Luxury Class & Style", 
   description = "Discover the latest in luxury fashion, modern elegance, and sophisticated style. Shop exclusive collections of premium clothing and accessories.",
-  name = "Madhus Fashion",
+  name = "Madhus Fashion House",
   type = "website",
   url = "https://madhusfashion.com",
   image = "https://images.unsplash.com/photo-1515347619252-73b313e6aeb6?q=80&w=1200&auto=format&fit=crop",
@@ -22,7 +22,7 @@ export function SEO({
   noindex = false
 }: SEOProps) {
   
-  const formattedTitle = title.includes("Madhus Fashion") ? title : `${title} | Madhus Fashion`;
+  const formattedTitle = title.includes("Madhus Fashion") ? title : `${title} | Madhus Fashion House`;
 
   return (
     <Helmet>

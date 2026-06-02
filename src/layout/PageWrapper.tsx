@@ -12,7 +12,7 @@ export function PageWrapper({ children, title }: PageWrapperProps) {
 
   useEffect(() => {
     // SEO Document Title management
-    document.title = `${title} | Madhus Fashion`;
+    document.title = `${title} | Madhus Fashion House`;
     // Scroll to top on page transition
     window.scrollTo(0, 0);
     // Track Page View

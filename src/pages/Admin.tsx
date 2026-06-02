@@ -104,7 +104,7 @@ export function AdminLogin() {
       <div className="w-full max-w-[420px] mx-auto">
         <div className="text-center mb-10">
           <h1 className="text-3xl font-serif text-charcoal mb-2">Admin Portal</h1>
-          <p className="text-charcoal/60 text-sm tracking-wide">Secure access to Madhus Fashion</p>
+          <p className="text-charcoal/60 text-sm tracking-wide">Secure access to Madhus Fashion House</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">

@@ -14,7 +14,7 @@ export function AdminSettings() {
   const [activeTab, setActiveTab] = useState("payment")
 
   // Example state for settings
-  const [storeName, setStoreName] = useState("Madhus Fashion")
+  const [storeName, setStoreName] = useState("Madhus Fashion House")
   const [contactEmail, setContactEmail] = useState("support@madhusfashion.com")
   const [currency, setCurrency] = useState("INR")
   const [taxRate, setTaxRate] = useState("8.5")

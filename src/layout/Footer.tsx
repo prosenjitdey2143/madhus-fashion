@@ -67,7 +67,7 @@ export function Footer() {
           {/* Brand Story */}
           <div className="md:col-span-12 lg:col-span-4">
             <Link to="/" className="text-3xl font-serif text-brand-primary tracking-tight mb-6 block leading-none">
-              Madhus Fashion
+              Madhus Fashion House
             </Link>
             <p className="text-brand-primary/60 text-sm leading-relaxed max-w-sm mb-8 font-light">
               Elevating everyday elegance. Discover our curated collection of luxury women's dresses designed to inspire confidence and timeless beauty.
@@ -132,7 +132,7 @@ export function Footer() {
           </div>
           
           <p className="text-[11px] text-brand-primary/40 tracking-wider">
-            &copy; {new Date().getFullYear()} MADHUS FASHION. ALL RIGHTS RESERVED.
+            &copy; {new Date().getFullYear()} MADHUS FASHION HOUSE. ALL RIGHTS RESERVED.
           </p>
           
           <div className="flex space-x-6 text-[11px] uppercase tracking-widest text-brand-primary/40">

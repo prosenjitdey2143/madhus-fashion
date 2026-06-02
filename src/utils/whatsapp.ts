@@ -8,7 +8,7 @@ export const generateWhatsAppMessage = (order: Order): string => {
   const { customerInfo, products, amount, paymentScreenshot, orderId } = order;
 
   // Greeting
-  let message = `Hello Madhus Fashion,\n\n*New Order Request*\nOrder ID: ${orderId}\n\n`;
+  let message = `Hello Madhus Fashion House,\n\n*New Order Request*\nOrder ID: ${orderId}\n\n`;
 
   // Customer Details
   message += `*Customer Details:*\n`;

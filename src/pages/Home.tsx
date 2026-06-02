@@ -17,7 +17,7 @@ export function Home() {
     <div className="flex flex-col min-h-screen bg-brand-primary">
       <SEO 
         title="Luxury Women's Fashion"
-        description="Discover Madhus Fashion's latest collection. Elevate your style with our elegant, modern, and high-quality luxury pieces."
+        description="Discover Madhus Fashion House's latest collection. Elevate your style with our elegant, modern, and high-quality luxury pieces."
       />
       
       <main>

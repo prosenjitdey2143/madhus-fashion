@@ -108,7 +108,7 @@ export function ProductDetails() {
     "sku": product.id,
     "brand": {
       "@type": "Brand",
-      "name": "Madhus Fashion"
+      "name": "Madhus Fashion House"
     },
     "offers": {
       "@type": "Offer",
