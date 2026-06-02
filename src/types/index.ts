@@ -5,7 +5,8 @@ export interface Product {
   originalPrice?: number;
   description: string;
   category: string;
-  collection?: string; // Tag for lookbooks (e.g. diwali, durgapuja, bhaidudh, party, office, picnic, holi, eid, winter)
+  collection?: string; // Legacy tag for lookbooks
+  collections?: string[]; // Array of tags for lookbooks
   sizes: string[];
   stock: number;
   images: string[];

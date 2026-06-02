@@ -54,7 +54,7 @@ export function Products() {
     
     // Filter by lookbook collection tag (from CollectionsSection "Explore Lookbook" links)
     if (collectionParam) {
-      return product.collection === collectionParam;
+      return product.collections?.includes(collectionParam) || product.collection === collectionParam;
     }
 
     if (!categoryParam) return true;

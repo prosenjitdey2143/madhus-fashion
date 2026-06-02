@@ -47,7 +47,7 @@ export function AdminProductForm() {
   const [newArrival, setNewArrival] = useState(false)
   const [bestSeller, setBestSeller] = useState(false)
   const [discount, setDiscount] = useState("")
-  const [productCollection, setProductCollection] = useState("")
+  const [productCollections, setProductCollections] = useState<string[]>([])
   const [dynamicCollections, setDynamicCollections] = useState<{value: string, label: string}[]>([])
 
   // Fetch collections for the dropdown
@@ -105,7 +105,7 @@ export function AdminProductForm() {
           setNewArrival(prod.newArrival || false)
           setBestSeller(prod.bestSeller || false)
           setDiscount(prod.discount ? prod.discount.toString() : "")
-          setProductCollection(prod.collection || "")
+          setProductCollections(prod.collections || (prod.collection ? [prod.collection] : []))
         } else {
           toast("Product not found.", "error")
           navigate("/dashboard/products")
@@ -125,6 +125,15 @@ export function AdminProductForm() {
       prev.includes(size) 
         ? prev.filter(s => s !== size)
         : [...prev, size]
+    )
+  }
+
+  const toggleCollection = (collectionValue: string) => {
+    if (!collectionValue) return; // Skip empty value ("None")
+    setProductCollections(prev => 
+      prev.includes(collectionValue) 
+        ? prev.filter(c => c !== collectionValue)
+        : [...prev, collectionValue]
     )
   }
 
@@ -180,7 +189,7 @@ export function AdminProductForm() {
       name: name.trim(),
       description: description.trim(),
       category,
-      collection: productCollection || null,
+      collections: productCollections,
       price: Number(price),
       weight: Number(weight),
       stock: Number(stock),
@@ -352,18 +361,30 @@ export function AdminProductForm() {
               </select>
             </div>
 
-            <div className="space-y-2 pt-2 border-t border-charcoal/5 dark:border-dark-border">
-              <label className="text-sm font-medium text-charcoal/80 dark:text-dark-text">Lookbook Collection</label>
-              <p className="text-xs text-charcoal/40 dark:text-dark-muted mb-1">Tag this product to a collection. It will appear when customers "Explore Lookbook".</p>
-              <select 
-                value={productCollection}
-                onChange={e => setProductCollection(e.target.value)}
-                className="w-full bg-secondary/5 dark:bg-dark-pill border border-charcoal/10 dark:border-dark-border rounded-lg p-3 text-sm focus:outline-none focus:border-charcoal/30 dark:focus:border-dark-surfaceHover dark:text-dark-text transition-colors appearance-none"
-              >
-                {dynamicCollections.length > 0 ? dynamicCollections.map(col => (
-                  <option key={col.value} value={col.value}>{col.label}</option>
-                )) : <option value="">None (No Collection)</option>}
-              </select>
+            <div className="space-y-3 pt-2 border-t border-charcoal/5 dark:border-dark-border">
+              <label className="text-sm font-medium text-charcoal/80 dark:text-dark-text flex justify-between">
+                <span>Lookbook Collections</span>
+                <span className="text-xs text-charcoal/40 dark:text-dark-muted">{productCollections.length} selected</span>
+              </label>
+              <p className="text-xs text-charcoal/40 dark:text-dark-muted mb-2">Tag this product to multiple collections.</p>
+              
+              <div className="flex flex-wrap gap-2">
+                {dynamicCollections.filter(c => c.value !== "").map(col => (
+                  <button
+                    key={col.value}
+                    type="button"
+                    onClick={() => toggleCollection(col.value)}
+                    className={cn(
+                      "px-3 py-1.5 border rounded-md text-xs font-medium transition-colors",
+                      productCollections.includes(col.value) 
+                        ? "bg-charcoal text-primary border-charcoal dark:bg-dark-text dark:text-dark-surface dark:border-dark-text" 
+                        : "bg-transparent border-charcoal/20 text-charcoal/60 hover:border-charcoal/40 hover:text-charcoal dark:border-dark-border dark:text-dark-muted dark:hover:border-dark-surfaceHover dark:hover:text-dark-text"
+                    )}
+                  >
+                    {col.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </AdminCard>
 
