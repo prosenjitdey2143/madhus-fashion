@@ -192,39 +192,22 @@ export function ProductDetails() {
       <div className="mx-auto lg:px-8 pt-0 pb-0 lg:pt-0 lg:pb-12 max-w-[1600px]">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-8 xl:gap-12">
           
-          {/* Mobile Image Carousel */}
-          <div className="lg:hidden w-full relative mb-8">
-            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide w-full h-[75vh]">
-              {product.images.map((img, idx) => (
-                <div key={idx} className="w-full shrink-0 snap-center h-full relative">
-                  <ResponsiveImage src={img} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
-                </div>
-              ))}
+          {/* Mobile Image Viewer */}
+          <div className="lg:hidden w-full flex flex-col gap-3 mb-8">
+            {/* Main Image */}
+            <div className="w-full aspect-[4/5] bg-brand-pale relative">
+              <ResponsiveImage src={product.images[currentImageIndex]} alt={`${product.name}`} className="w-full h-full object-cover" />
             </div>
-            <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 pointer-events-none">
-              {product.images.map((_, idx) => (
-                <div key={idx} className="w-1.5 h-1.5 rounded-full bg-white/50 backdrop-blur-md" />
-              ))}
-            </div>
-          </div>
-
-          {/* Desktop Image Viewer */}
-          <div className="hidden lg:flex lg:col-span-5 xl:col-span-5 flex-col items-center gap-4 h-[calc(100vh-60px)]">
-            <div className="h-[calc(100%-80px)] aspect-[3/4] bg-brand-pale shrink-0 w-auto">
-              <ImageMagnifier 
-                src={product.images[currentImageIndex]} 
-                alt={`${product.name} View ${currentImageIndex + 1}`} 
-                zoomLevel={2.5}
-              />
-            </div>
+            
+            {/* Thumbnails (Below) */}
             {product.images.length > 1 && (
-              <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide h-[84px] shrink-0 w-full justify-center">
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide w-full px-4">
                 {product.images.map((img, idx) => (
                   <button 
                     key={idx} 
                     onClick={() => setCurrentImageIndex(idx)}
                     className={cn(
-                      "h-full aspect-[3/4] shrink-0 bg-brand-pale overflow-hidden border transition-all duration-300",
+                      "w-[70px] aspect-[3/4] shrink-0 bg-brand-pale overflow-hidden border transition-all duration-300",
                       currentImageIndex === idx 
                         ? "border-brand-text opacity-100" 
                         : "border-transparent opacity-50 hover:opacity-100"
@@ -235,6 +218,38 @@ export function ProductDetails() {
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Desktop Image Viewer */}
+          <div className="hidden lg:flex lg:col-span-5 xl:col-span-5 flex-row items-start gap-4 h-[calc(100vh-60px)]">
+            {/* Thumbnails (Left side) */}
+            {product.images.length > 1 && (
+              <div className="flex flex-col gap-4 overflow-y-auto pr-2 scrollbar-hide h-[calc(100%-80px)] w-[84px] shrink-0">
+                {product.images.map((img, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={() => setCurrentImageIndex(idx)}
+                    className={cn(
+                      "w-full aspect-[3/4] shrink-0 bg-brand-pale overflow-hidden border transition-all duration-300",
+                      currentImageIndex === idx 
+                        ? "border-brand-text opacity-100" 
+                        : "border-transparent opacity-50 hover:opacity-100"
+                    )}
+                  >
+                    <ResponsiveImage src={img} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+            
+            {/* Main Image */}
+            <div className="h-[calc(100%-80px)] aspect-[3/4] bg-brand-pale shrink-0 w-auto relative">
+              <ImageMagnifier 
+                src={product.images[currentImageIndex]} 
+                alt={`${product.name} View ${currentImageIndex + 1}`} 
+                zoomLevel={2.5}
+              />
+            </div>
           </div>
 
           {/* Product Info (Sticky) */}
