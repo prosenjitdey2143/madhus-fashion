@@ -48,6 +48,7 @@ export function AdminProductForm() {
   const [bestSeller, setBestSeller] = useState(false)
   const [discount, setDiscount] = useState("")
   const [productCollections, setProductCollections] = useState<string[]>([])
+  const [isCollectionDropdownOpen, setIsCollectionDropdownOpen] = useState(false)
   const [dynamicCollections, setDynamicCollections] = useState<{value: string, label: string}[]>([])
 
   // Fetch collections for the dropdown
@@ -361,29 +362,61 @@ export function AdminProductForm() {
               </select>
             </div>
 
-            <div className="space-y-3 pt-2 border-t border-charcoal/5 dark:border-dark-border">
+            <div className="space-y-3 pt-2 border-t border-charcoal/5 dark:border-dark-border relative">
               <label className="text-sm font-medium text-charcoal/80 dark:text-dark-text flex justify-between">
                 <span>Lookbook Collections</span>
                 <span className="text-xs text-charcoal/40 dark:text-dark-muted">{productCollections.length} selected</span>
               </label>
               <p className="text-xs text-charcoal/40 dark:text-dark-muted mb-2">Tag this product to multiple collections.</p>
               
-              <div className="flex flex-wrap gap-2">
-                {dynamicCollections.filter(c => c.value !== "").map(col => (
-                  <button
-                    key={col.value}
-                    type="button"
-                    onClick={() => toggleCollection(col.value)}
-                    className={cn(
-                      "px-3 py-1.5 border rounded-md text-xs font-medium transition-colors",
-                      productCollections.includes(col.value) 
-                        ? "bg-charcoal text-primary border-charcoal dark:bg-dark-text dark:text-dark-surface dark:border-dark-text" 
-                        : "bg-transparent border-charcoal/20 text-charcoal/60 hover:border-charcoal/40 hover:text-charcoal dark:border-dark-border dark:text-dark-muted dark:hover:border-dark-surfaceHover dark:hover:text-dark-text"
-                    )}
-                  >
-                    {col.label}
-                  </button>
-                ))}
+              <div className="relative">
+                {/* Dropdown Header */}
+                <div 
+                  className="w-full bg-secondary/5 dark:bg-dark-pill border border-charcoal/10 dark:border-dark-border rounded-lg p-3 text-sm cursor-pointer flex justify-between items-center transition-colors hover:border-charcoal/30 dark:hover:border-dark-surfaceHover"
+                  onClick={() => setIsCollectionDropdownOpen(!isCollectionDropdownOpen)}
+                >
+                  <span className="truncate text-charcoal/80 dark:text-dark-text font-medium pr-4">
+                    {productCollections.length === 0 
+                      ? "None (No Collection)" 
+                      : productCollections.map(val => dynamicCollections.find(c => c.value === val)?.label || val).join(", ")}
+                  </span>
+                  <span className="text-charcoal/40 dark:text-dark-muted text-[10px]">▼</span>
+                </div>
+                
+                {/* Dropdown Menu */}
+                {isCollectionDropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setIsCollectionDropdownOpen(false)} />
+                    <div className="absolute z-20 w-full mt-2 bg-white dark:bg-dark-surface border border-charcoal/10 dark:border-dark-border rounded-lg shadow-2xl max-h-64 overflow-y-auto overflow-x-hidden">
+                      {dynamicCollections.map(col => {
+                        const isChecked = col.value === "" ? productCollections.length === 0 : productCollections.includes(col.value);
+                        return (
+                          <label key={col.value} className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/5 dark:hover:bg-dark-surfaceHover cursor-pointer border-b border-charcoal/5 dark:border-dark-border last:border-0 transition-colors">
+                            <input 
+                              type="checkbox"
+                              className="w-4 h-4 accent-charcoal dark:accent-dark-text rounded border-charcoal/20 shrink-0"
+                              checked={isChecked}
+                              onChange={() => {
+                                if (col.value === "") {
+                                  setProductCollections([]);
+                                  setIsCollectionDropdownOpen(false);
+                                } else {
+                                  toggleCollection(col.value);
+                                }
+                              }}
+                            />
+                            <span className={cn(
+                              "text-sm transition-colors truncate",
+                              isChecked ? "text-charcoal font-semibold dark:text-dark-text" : "text-charcoal/70 dark:text-dark-muted"
+                            )}>
+                              {col.label}
+                            </span>
+                          </label>
+                        )
+                      })}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </AdminCard>
