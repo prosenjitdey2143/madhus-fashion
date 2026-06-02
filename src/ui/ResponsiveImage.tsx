@@ -32,13 +32,17 @@ export function ResponsiveImage({
   const smallSrc = getOptimizedImageUrl(src, 400);
   const mediumSrc = getOptimizedImageUrl(src, 800);
   const largeSrc = getOptimizedImageUrl(src, 1200);
+  const xlSrc = getOptimizedImageUrl(src, 1600);
+  const xxlSrc = getOptimizedImageUrl(src, 2000);
 
   // If there's no proxy URL configured in .env, the utility returns the exact original URL.
   // In that case, srcset will just list the same URL 3 times, which the browser safely ignores.
   const srcSet = `
     ${smallSrc} 400w,
     ${mediumSrc} 800w,
-    ${largeSrc} 1200w
+    ${largeSrc} 1200w,
+    ${xlSrc} 1600w,
+    ${xxlSrc} 2000w
   `;
 
   // Provide sizes hints to the browser based on typical container widths

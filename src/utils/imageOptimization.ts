@@ -15,8 +15,8 @@ export function getOptimizedImageUrl(originalUrl: string, width?: number): strin
   
   const baseUrl = PROXY_URL.endsWith('/') ? PROXY_URL.slice(0, -1) : PROXY_URL;
   
-  // Build transformation string e.g. "tr:f-webp,w-400"
-  const transformations = ['f-webp'];
+  // Build transformation string e.g. "tr:f-webp,q-90,w-400"
+  const transformations = ['f-webp', 'q-90'];
   if (width) {
     transformations.push(`w-${width}`);
   }
