@@ -66,8 +66,12 @@ export function Footer() {
           
           {/* Brand Story */}
           <div className="md:col-span-12 lg:col-span-4">
-            <Link to="/" className="text-3xl font-serif text-brand-primary tracking-tight mb-6 block leading-none">
-              Madhus Fashion House
+            <Link to="/" className="inline-block mb-8 bg-brand-primary/95 p-4 rounded-xl shadow-soft">
+              <img 
+                src="/logo.png" 
+                alt="Madhus Fashion House" 
+                className="h-10 md:h-12 w-auto object-contain"
+              />
             </Link>
             <p className="text-brand-primary/60 text-sm leading-relaxed max-w-sm mb-8 font-light">
               Elevating everyday elegance. Discover our curated collection of luxury women's dresses designed to inspire confidence and timeless beauty.
