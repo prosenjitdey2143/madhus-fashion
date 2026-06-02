@@ -391,20 +391,34 @@ export function AdminProductForm() {
                       {dynamicCollections.map(col => {
                         const isChecked = col.value === "" ? productCollections.length === 0 : productCollections.includes(col.value);
                         return (
-                          <label key={col.value} className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/5 dark:hover:bg-dark-surfaceHover cursor-pointer border-b border-charcoal/5 dark:border-dark-border last:border-0 transition-colors">
-                            <input 
-                              type="checkbox"
-                              className="w-4 h-4 accent-charcoal dark:accent-dark-text rounded border-charcoal/20 shrink-0"
-                              checked={isChecked}
-                              onChange={() => {
-                                if (col.value === "") {
-                                  setProductCollections([]);
-                                  setIsCollectionDropdownOpen(false);
-                                } else {
-                                  toggleCollection(col.value);
-                                }
-                              }}
-                            />
+                          <label key={col.value} className="group flex items-center gap-3 px-4 py-3 hover:bg-secondary/5 dark:hover:bg-dark-surfaceHover cursor-pointer border-b border-charcoal/5 dark:border-dark-border last:border-0 transition-colors">
+                            <div className="relative flex items-center shrink-0">
+                              <input 
+                                type="checkbox"
+                                className="peer sr-only"
+                                checked={isChecked}
+                                onChange={() => {
+                                  if (col.value === "") {
+                                    setProductCollections([]);
+                                    setIsCollectionDropdownOpen(false);
+                                  } else {
+                                    toggleCollection(col.value);
+                                  }
+                                }}
+                              />
+                              <div className={cn(
+                                "w-5 h-5 rounded border transition-all duration-300 flex items-center justify-center",
+                                isChecked 
+                                  ? "bg-charcoal border-charcoal dark:bg-dark-text dark:border-dark-text shadow-sm" 
+                                  : "border-charcoal/30 dark:border-dark-border bg-transparent group-hover:border-charcoal/50 dark:group-hover:border-dark-muted"
+                              )}>
+                                {isChecked && (
+                                  <svg className="w-3.5 h-3.5 text-white dark:text-dark-surface" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                  </svg>
+                                )}
+                              </div>
+                            </div>
                             <span className={cn(
                               "text-sm transition-colors truncate",
                               isChecked ? "text-charcoal font-semibold dark:text-dark-text" : "text-charcoal/70 dark:text-dark-muted"
