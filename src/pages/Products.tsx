@@ -62,12 +62,15 @@ export function Products() {
     if (categoryParam === "best-sellers") return product.bestSeller;
     if (categoryParam === "offers") return product.discount && product.discount > 0;
     if (categoryParam === "collections") return product.featured;
-    return product.category.toLowerCase() === categoryParam.toLowerCase();
+    
+    const normalize = (str: string) => str.toLowerCase().replace(/[\s-]/g, '');
+    return normalize(product.category) === normalize(categoryParam);
   });
 
   // Apply Sub-filter
   if (subFilter !== "All") {
-    filteredProducts = filteredProducts.filter(p => p.category.toLowerCase() === subFilter.toLowerCase());
+    const normalize = (str: string) => str.toLowerCase().replace(/[\s-]/g, '');
+    filteredProducts = filteredProducts.filter(p => normalize(p.category) === normalize(subFilter));
   }
 
   // Apply Sorting

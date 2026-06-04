@@ -17,6 +17,7 @@ const CATEGORIES = ["Dresses", "Gowns", "Outerwear", "Tops", "Bottoms", "Accesso
 const SIZES = ["One Size", "XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"]
 
 import { collectionService } from "../../services/firebase/collectionService"
+import { categoryService } from "../../services/firebase/categoryService"
 
 export function AdminProductForm() {
   const { id } = useParams<{ id: string }>()
@@ -50,10 +51,11 @@ export function AdminProductForm() {
   const [productCollections, setProductCollections] = useState<string[]>([])
   const [isCollectionDropdownOpen, setIsCollectionDropdownOpen] = useState(false)
   const [dynamicCollections, setDynamicCollections] = useState<{value: string, label: string}[]>([])
+  const [dynamicCategories, setDynamicCategories] = useState<string[]>(CATEGORIES)
 
-  // Fetch collections for the dropdown
+  // Fetch collections and categories for the dropdowns
   useEffect(() => {
-    async function fetchCollections() {
+    async function fetchData() {
       try {
         const cols = await collectionService.getAllCollections()
         const options = cols.map(c => {
@@ -64,11 +66,18 @@ export function AdminProductForm() {
           return { value: val, label: c.title }
         })
         setDynamicCollections([{ value: "", label: "None (No Collection)" }, ...options])
+
+        const cats = await categoryService.getActiveCategories()
+        if (cats && cats.length > 0) {
+          const catTitles = cats.map(c => c.title)
+          // Merge hardcoded with dynamic, removing duplicates
+          setDynamicCategories(Array.from(new Set([...CATEGORIES, ...catTitles])))
+        }
       } catch (err) {
-        console.error("Failed to load collections for dropdown", err)
+        console.error("Failed to load collections or categories", err)
       }
     }
-    fetchCollections()
+    fetchData()
   }, [])
 
   // Auto-calculate discount
@@ -356,7 +365,7 @@ export function AdminProductForm() {
                 onChange={e => setCategory(e.target.value)}
                 className="w-full bg-secondary/5 dark:bg-dark-pill border border-charcoal/10 dark:border-dark-border rounded-lg p-3 text-sm focus:outline-none focus:border-charcoal/30 dark:focus:border-dark-surfaceHover dark:text-dark-text transition-colors appearance-none"
               >
-                {CATEGORIES.map(cat => (
+                {dynamicCategories.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
