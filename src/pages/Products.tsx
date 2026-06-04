@@ -63,14 +63,21 @@ export function Products() {
     if (categoryParam === "offers") return product.discount && product.discount > 0;
     if (categoryParam === "collections") return product.featured;
     
-    const normalize = (str: string) => str.toLowerCase().replace(/[\s-]/g, '');
-    return normalize(product.category) === normalize(categoryParam);
+    const normalize = (str?: string) => (str || "").toLowerCase().replace(/[\s-]/g, '');
+    const pCat = normalize(product.category);
+    const cParam = normalize(categoryParam);
+    
+    return pCat === cParam || pCat + 's' === cParam || pCat + 'es' === cParam || pCat === cParam + 's' || pCat === cParam + 'es';
   });
 
   // Apply Sub-filter
   if (subFilter !== "All") {
-    const normalize = (str: string) => str.toLowerCase().replace(/[\s-]/g, '');
-    filteredProducts = filteredProducts.filter(p => normalize(p.category) === normalize(subFilter));
+    const normalize = (str?: string) => (str || "").toLowerCase().replace(/[\s-]/g, '');
+    filteredProducts = filteredProducts.filter(p => {
+      const pCat = normalize(p.category);
+      const sub = normalize(subFilter);
+      return pCat === sub || pCat + 's' === sub || pCat + 'es' === sub || pCat === sub + 's' || pCat === sub + 'es';
+    });
   }
 
   // Apply Sorting
