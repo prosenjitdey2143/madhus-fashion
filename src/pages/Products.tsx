@@ -6,6 +6,7 @@ import { useSearchParams, Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import { useProducts } from "../hooks/useProducts"
 import { trendingService } from "../services/firebase/trendingService"
+import { categoryService } from "../services/firebase/categoryService"
 import type { TrendingSettings, TrendingCard } from "../types"
 import { ProductCardSkeleton } from "../ui/Skeleton"
 
@@ -31,9 +32,14 @@ export function Products() {
     }
   }, [trendingParam])
 
-  
-  const [subFilter, setSubFilter] = useState("All")
+  const [categories, setCategories] = useState<any[]>([])
   const [sortBy, setSortBy] = useState("Newest")
+
+  useEffect(() => {
+    categoryService.getActiveCategories()
+      .then(cats => setCategories(cats))
+      .catch(console.error)
+  }, [])
   
   let filteredProducts = products.filter(product => {
     if (searchParam) {
@@ -70,15 +76,7 @@ export function Products() {
     return pCat === cParam || pCat + 's' === cParam || pCat + 'es' === cParam || pCat === cParam + 's' || pCat === cParam + 'es';
   });
 
-  // Apply Sub-filter
-  if (subFilter !== "All") {
-    const normalize = (str?: string) => (str || "").toLowerCase().replace(/[\s-]/g, '');
-    filteredProducts = filteredProducts.filter(p => {
-      const pCat = normalize(p.category);
-      const sub = normalize(subFilter);
-      return pCat === sub || pCat + 's' === sub || pCat + 'es' === sub || pCat === sub + 's' || pCat === sub + 'es';
-    });
-  }
+  // Removed Sub-filter since it's now handled by the URL params
 
   // Apply Sorting
   filteredProducts = [...filteredProducts].sort((a, b) => {
@@ -181,18 +179,30 @@ export function Products() {
             <div>
               <h3 className="text-[10px] uppercase tracking-[0.2em] text-brand-text/40 font-bold mb-6">Categories</h3>
               <div className="flex flex-col space-y-4 text-sm font-medium text-brand-text/70">
-                {["All", "Dresses", "Gowns", "Outerwear"].map(cat => (
-                  <button 
-                    key={cat}
-                    onClick={() => setSubFilter(cat)}
-                    className={`text-left relative w-fit transition-colors duration-300 ${subFilter === cat ? "text-brand-text" : "hover:text-brand-text"}`}
-                  >
-                    {cat === "All" ? "All Pieces" : cat}
-                    {subFilter === cat && (
-                      <motion.div layoutId="activeCat" className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-brand-text" />
-                    )}
-                  </button>
-                ))}
+                <Link 
+                  to="/products"
+                  className={`text-left relative w-fit transition-colors duration-300 ${!categoryParam && !collectionParam && !searchParam && !trendingParam ? "text-brand-text" : "hover:text-brand-text"}`}
+                >
+                  All Pieces
+                  {!categoryParam && !collectionParam && !searchParam && !trendingParam && (
+                    <motion.div layoutId="activeCat" className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-brand-text" />
+                  )}
+                </Link>
+                {categories.map(cat => {
+                  const isActive = categoryParam && cat.link.includes(categoryParam);
+                  return (
+                    <Link 
+                      key={cat.id}
+                      to={cat.link}
+                      className={`text-left relative w-fit transition-colors duration-300 ${isActive ? "text-brand-text" : "hover:text-brand-text"}`}
+                    >
+                      {cat.title}
+                      {isActive && (
+                        <motion.div layoutId="activeCat" className="absolute -bottom-1 left-0 right-0 h-[1.5px] bg-brand-text" />
+                      )}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
@@ -222,15 +232,24 @@ export function Products() {
         <div className="lg:hidden flex flex-col sm:flex-row justify-between items-center mb-10 space-y-6 sm:space-y-0 border-t border-b border-brand-text/5 py-5">
           <div className="flex items-center space-x-6 w-full sm:w-auto overflow-x-auto scrollbar-hide">
             <div className="flex space-x-6 text-[11px] uppercase tracking-[0.2em] text-brand-text/50 shrink-0 font-semibold">
-              {["All", "Dresses", "Gowns", "Outerwear"].map(cat => (
-                <button 
-                  key={cat}
-                  onClick={() => setSubFilter(cat)}
-                  className={`pb-1 transition-colors ${subFilter === cat ? "text-brand-text border-b border-brand-text" : "hover:text-brand-text"}`}
-                >
-                  {cat === "All" ? "All Pieces" : cat}
-                </button>
-              ))}
+              <Link 
+                to="/products"
+                className={`pb-1 transition-colors ${!categoryParam && !collectionParam && !searchParam && !trendingParam ? "text-brand-text border-b border-brand-text" : "hover:text-brand-text"}`}
+              >
+                All Pieces
+              </Link>
+              {categories.map(cat => {
+                const isActive = categoryParam && cat.link.includes(categoryParam);
+                return (
+                  <Link 
+                    key={cat.id}
+                    to={cat.link}
+                    className={`pb-1 transition-colors ${isActive ? "text-brand-text border-b border-brand-text" : "hover:text-brand-text"}`}
+                  >
+                    {cat.title}
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
