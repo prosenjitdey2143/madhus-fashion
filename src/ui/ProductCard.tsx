@@ -71,7 +71,7 @@ export function ProductCard({
             <ResponsiveImage 
               src={imageUrl} 
               alt={name}
-              className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-[1200ms] ease-[0.25,1,0.5,1]"
+              className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-[1200ms] ease-[0.25,1,0.5,1] will-change-transform bg-secondary/5"
             />
           ) : (
             <div className="w-full h-full bg-secondary/20 flex items-center justify-center text-charcoal/30">
