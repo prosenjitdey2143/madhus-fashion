@@ -20,8 +20,8 @@ const DEFAULT_CARDS: TrendingCard[] = [
     title: "Summer Silhouettes",
     subtitle: "EST. 01 / SELECTION",
     description: "Breathable, flowing designs crafted from finest linens and raw cotton, inspired by sun-kissed European afternoons.",
-    mainImage: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?q=80&w=1946&auto=format&fit=crop",
-    textureImage: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop",
+    mainImage: "/logo.png",
+    textureImage: "/logo.png",
     productIds: []
   },
   {
@@ -29,8 +29,8 @@ const DEFAULT_CARDS: TrendingCard[] = [
     title: "Evening Elegance",
     subtitle: "EST. 02 / SELECTION",
     description: "Command attention in structured evening wear, liquid satins, and tailored coordinates made for moonlit occasions.",
-    mainImage: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?q=80&w=1983&auto=format&fit=crop",
-    textureImage: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1000&auto=format&fit=crop",
+    mainImage: "/logo.png",
+    textureImage: "/logo.png",
     productIds: []
   }
 ];

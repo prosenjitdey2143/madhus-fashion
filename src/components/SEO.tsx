@@ -13,11 +13,11 @@ interface SEOProps {
 
 export function SEO({ 
   title = "Madhus Fashion House | Luxury Class & Style", 
-  description = "Discover the latest in luxury fashion, modern elegance, and sophisticated style. Shop exclusive collections of premium clothing and accessories.",
+  description = "Discover our meticulously curated selection of modern luxury pieces.",
   name = "Madhus Fashion House",
   type = "website",
   url = "https://madhusfashion.com",
-  image = "https://images.unsplash.com/photo-1515347619252-73b313e6aeb6?q=80&w=1200&auto=format&fit=crop",
+  image = "/logo.png",
   schema,
   noindex = false
 }: SEOProps) {

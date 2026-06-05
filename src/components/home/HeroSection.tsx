@@ -9,7 +9,7 @@ const DEFAULT_SLIDES = [
     subtitle: "Spring / Summer 2026",
     title: "Modern Elegance",
     description: "Quiet luxury essentials designed for the sophisticated woman.",
-    image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop",
+    image: "/logo.png",
     ctaText: "Shop The Edit",
     ctaLink: "/products?category=new"
   },
@@ -17,7 +17,7 @@ const DEFAULT_SLIDES = [
     subtitle: "Evening Collection",
     title: "Midnight Glamour",
     description: "Make a statement with our new meticulously crafted evening wear.",
-    image: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=1908&auto=format&fit=crop",
+    image: "/logo.png",
     ctaText: "Explore Evening",
     ctaLink: "/products?category=evening"
   },
@@ -25,7 +25,7 @@ const DEFAULT_SLIDES = [
     subtitle: "Resort Edit",
     title: "Sun-Kissed Silhouettes",
     description: "Breezy linens and effortless styles for your next getaway.",
-    image: "https://images.unsplash.com/photo-1515347619152-47535cbd4a2c?q=80&w=2070&auto=format&fit=crop",
+    image: "/logo.png",
     ctaText: "Discover Resort",
     ctaLink: "/products?category=resort"
   }
@@ -91,17 +91,17 @@ export function HeroSection() {
           className="absolute inset-0"
         >
           {/* Background Image with Overlay */}
-          <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 z-0 bg-brand-pale">
             <motion.img 
               initial={{ scale: 1.1 }}
               animate={{ scale: 1 }}
               transition={{ duration: 6, ease: "easeOut" }}
               src={SLIDES[currentSlide].image} 
               alt={SLIDES[currentSlide].title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover opacity-30 mix-blend-multiply"
             />
-            <div className="absolute inset-0 bg-brand-text/30" />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-text/90 via-brand-text/20 to-transparent" />
+            <div className="absolute inset-0 bg-charcoal/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent" />
           </div>
 
           {/* Text Content */}
