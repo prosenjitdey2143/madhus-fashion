@@ -163,7 +163,7 @@ function VideoPlayerModal({ video, onClose }: { video: VideoData, onClose: () =>
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.4, delay: 0.1 }}
-        className="relative w-full max-w-md aspect-[9/16] bg-black shadow-2xl rounded-lg overflow-hidden group"
+        className="relative h-[80vh] md:h-[90vh] max-w-[90vw] aspect-[9/16] bg-black shadow-2xl rounded-lg overflow-hidden group"
       >
         {video.type === 'facebook' ? (
           <iframe 
