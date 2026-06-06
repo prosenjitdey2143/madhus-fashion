@@ -17,6 +17,7 @@ export interface VideoData {
   title: string
   videoUrl: string
   type: 'mp4' | 'facebook'
+  priority?: number
   createdAt?: any
 }
 
@@ -26,10 +27,16 @@ export const videoService = {
   async getAllVideos(): Promise<VideoData[]> {
     const q = query(collection(db, COLLECTION_NAME), orderBy("createdAt", "desc"))
     const snapshot = await getDocs(q)
-    return snapshot.docs.map(doc => ({
+    const videos = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     })) as VideoData[]
+    
+    return videos.sort((a, b) => {
+      const priorityA = a.priority ?? 999999
+      const priorityB = b.priority ?? 999999
+      return priorityA - priorityB
+    })
   },
 
   async getVideoById(id: string): Promise<VideoData | null> {

@@ -76,6 +76,7 @@ export function AdminVideos() {
                 <tr>
                   <th className="px-6 py-4 font-medium">Preview</th>
                   <th className="px-6 py-4 font-medium">Title</th>
+                  <th className="px-6 py-4 font-medium">Priority</th>
                   <th className="px-6 py-4 font-medium">Type</th>
                   <th className="px-6 py-4 font-medium text-right">Actions</th>
                 </tr>
@@ -104,6 +105,11 @@ export function AdminVideos() {
                         <ExternalLink className="w-3 h-3" />
                         {video.videoUrl}
                       </a>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm font-medium text-charcoal dark:text-dark-text">
+                        {video.priority === 999 || video.priority === undefined ? '-' : video.priority}
+                      </span>
                     </td>
                     <td className="px-6 py-4">
                       <span className="px-2.5 py-1 bg-charcoal/5 dark:bg-dark-pill text-charcoal dark:text-dark-text rounded text-xs font-medium uppercase tracking-wider">

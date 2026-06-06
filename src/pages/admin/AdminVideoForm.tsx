@@ -20,6 +20,7 @@ export function AdminVideoForm() {
 
   const [title, setTitle] = useState("")
   const [videoUrl, setVideoUrl] = useState("")
+  const [priority, setPriority] = useState<number | ''>('')
   const [type, setType] = useState<'mp4' | 'facebook'>('mp4')
 
   useEffect(() => {
@@ -30,6 +31,7 @@ export function AdminVideoForm() {
         if (vid) {
           setTitle(vid.title)
           setVideoUrl(vid.videoUrl)
+          setPriority(vid.priority ?? '')
           setType(vid.type)
         } else {
           toast("Video not found.", "error")
@@ -62,6 +64,7 @@ export function AdminVideoForm() {
     const videoData = {
       title: title.trim(),
       videoUrl: videoUrl.trim(),
+      priority: priority === '' ? 999 : Number(priority),
       type
     }
 
@@ -129,6 +132,20 @@ export function AdminVideoForm() {
           />
           <p className="text-xs text-charcoal/40 dark:text-dark-muted mt-1">
             Paste a Facebook video link or a direct .mp4 URL. The system will automatically detect the format!
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-charcoal/80 dark:text-dark-text">Priority</label>
+          <Input 
+            type="number"
+            value={priority} 
+            onChange={e => setPriority(e.target.value ? Number(e.target.value) : '')} 
+            placeholder="e.g. 1 (shows first)" 
+            className="w-full bg-secondary/5 dark:bg-dark-pill border-charcoal/10 dark:border-dark-border"
+          />
+          <p className="text-xs text-charcoal/40 dark:text-dark-muted mt-1">
+            Lower numbers show first. If left blank, it will be placed at the end.
           </p>
         </div>
       </AdminCard>
