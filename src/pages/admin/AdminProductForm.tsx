@@ -13,7 +13,6 @@ import { useToast } from "../../context/ToastContext"
 import { cn } from "../../utils/utils"
 import { ImageUploader } from "../../ui/admin/ImageUploader"
 
-const CATEGORIES = ["Dresses", "Gowns", "Outerwear", "Tops", "Bottoms", "Accessories"]
 const SIZES = ["One Size", "XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"]
 
 import { collectionService } from "../../services/firebase/collectionService"
@@ -34,7 +33,7 @@ export function AdminProductForm() {
   // Form State
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
-  const [category, setCategory] = useState(CATEGORIES[0])
+  const [category, setCategory] = useState("")
   const [price, setPrice] = useState("")
   const [originalPrice, setOriginalPrice] = useState("")
   const [stock, setStock] = useState("10")
@@ -51,7 +50,7 @@ export function AdminProductForm() {
   const [productCollections, setProductCollections] = useState<string[]>([])
   const [isCollectionDropdownOpen, setIsCollectionDropdownOpen] = useState(false)
   const [dynamicCollections, setDynamicCollections] = useState<{value: string, label: string}[]>([])
-  const [dynamicCategories, setDynamicCategories] = useState<string[]>(CATEGORIES)
+  const [dynamicCategories, setDynamicCategories] = useState<string[]>([])
 
   // Fetch collections and categories for the dropdowns
   useEffect(() => {
@@ -70,8 +69,9 @@ export function AdminProductForm() {
         const cats = await categoryService.getActiveCategories()
         if (cats && cats.length > 0) {
           const catTitles = cats.map(c => c.title)
-          // Merge hardcoded with dynamic, removing duplicates
-          setDynamicCategories(Array.from(new Set([...CATEGORIES, ...catTitles])))
+          setDynamicCategories(catTitles)
+          // Set default category to first dynamic category if not already set (e.g. from loading product)
+          setCategory(prev => prev || catTitles[0])
         }
       } catch (err) {
         console.error("Failed to load collections or categories", err)
@@ -189,6 +189,7 @@ export function AdminProductForm() {
     // Validation
     if (!name.trim()) return toast("Product name is required", "error")
     if (!description.trim()) return toast("Description is required", "error")
+    if (!category) return toast("Category is required. Please create a category first.", "error")
     if (!price || isNaN(Number(price))) return toast("Valid price is required", "error")
     if (images.length === 0) return toast("At least one image is required", "error")
     if (sizes.length === 0) return toast("Select at least one size", "error")
