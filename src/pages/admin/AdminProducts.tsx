@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
 import { Plus, Search, Edit2, Trash2, AlertTriangle, X, LayoutGrid, List } from "lucide-react"
 import { useProducts } from "../../hooks/useProducts"
@@ -24,11 +24,24 @@ export function AdminProducts() {
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set())
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false)
   const [isBulkDeleting, setIsBulkDeleting] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState<string>("All")
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    p.category.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const uniqueCategories = useMemo(() => {
+    const cats = new Set(products.map(p => p.category));
+    return ["All", ...Array.from(cats)].sort((a, b) => {
+      if (a === "All") return -1;
+      if (b === "All") return 1;
+      return a.localeCompare(b);
+    });
+  }, [products]);
+
+  const filteredProducts = products.filter(p => {
+    const matchesCategory = selectedCategory === "All" || p.category === selectedCategory;
+    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                          p.category.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
 
   const handleDeleteConfirm = async () => {
     if (!productToDelete) return;
@@ -167,6 +180,23 @@ export function AdminProducts() {
               </div>
             </div>
           </div>
+        </div>
+        {/* Category Filter Pills */}
+        <div className="px-4 py-3 border-b border-charcoal/10 dark:border-dark-border bg-white dark:bg-dark-bg overflow-x-auto custom-scrollbar flex items-center gap-2">
+          {uniqueCategories.map(category => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={cn(
+                "px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors",
+                selectedCategory === category
+                  ? "bg-charcoal text-white dark:bg-dark-text dark:text-dark-surface shadow-sm"
+                  : "bg-secondary/10 text-charcoal/70 hover:bg-secondary/20 dark:bg-dark-pill dark:text-dark-muted dark:hover:bg-dark-surfaceHover dark:hover:text-dark-text"
+              )}
+            >
+              {category}
+            </button>
+          ))}
         </div>
 
         {viewMode === "grid" ? (
