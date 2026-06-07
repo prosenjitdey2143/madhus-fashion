@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { SEO } from "../components/SEO"
 import { analyticsService } from "../services/analytics/analyticsService"
 import { cn } from "../utils/utils"
@@ -7,6 +7,130 @@ import { Link, useNavigate } from "react-router-dom"
 import { useCart } from "../context/CartContext"
 import { useToast } from "../context/ToastContext"
 import { orderService } from "../services/firebase/orderService"
+
+// --- State Combobox Component ---
+function StateCombobox({ value, onChange, error, className }: { value: string, onChange: (val: string) => void, error?: string, className?: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [inputValue, setInputValue] = useState(value);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+
+  const states = [
+    "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar",
+    "Chandigarh", "Chhattisgarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Goa",
+    "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir", "Jharkhand", "Karnataka",
+    "Kerala", "Ladakh", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
+    "Mizoram", "Nagaland", "Odisha", "Puducherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu",
+    "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+  ];
+
+  const filteredStates = states.filter(s => s.toLowerCase().includes(inputValue.toLowerCase()));
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setHighlightedIndex(-1);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen && highlightedIndex >= 0 && listRef.current) {
+      const activeItem = listRef.current.children[highlightedIndex] as HTMLElement;
+      if (activeItem) {
+        activeItem.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [highlightedIndex, isOpen]);
+
+  const handleSelect = (state: string) => {
+    setInputValue(state);
+    onChange(state);
+    setIsOpen(false);
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    onChange(e.target.value);
+    setIsOpen(true);
+    setHighlightedIndex(-1);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen) {
+      if (e.key === 'ArrowDown') {
+        setIsOpen(true);
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIndex(prev => (prev < filteredStates.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex(prev => (prev > 0 ? prev - 1 : prev));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (highlightedIndex >= 0 && highlightedIndex < filteredStates.length) {
+        handleSelect(filteredStates[highlightedIndex]);
+      } else if (filteredStates.length > 0) {
+        handleSelect(filteredStates[0]);
+      }
+    } else if (e.key === 'Escape') {
+      setIsOpen(false);
+    }
+  };
+
+  return (
+    <div ref={wrapperRef} className="relative w-full z-50">
+      <input 
+        type="text" 
+        value={inputValue}
+        onChange={handleInputChange}
+        onFocus={() => setIsOpen(true)}
+        onKeyDown={handleKeyDown}
+        placeholder="State / Province *" 
+        className={className}
+      />
+      {isOpen && filteredStates.length > 0 && (
+        <ul 
+          ref={listRef}
+          onMouseDown={(e) => e.preventDefault()}
+          className="absolute z-50 w-full mt-1 bg-[#F9F7F1] border border-brand-text/10 shadow-lg max-h-60 overflow-y-auto custom-scrollbar"
+        >
+          {filteredStates.map((state, index) => (
+            <li 
+              key={state}
+              onClick={() => handleSelect(state)}
+              onMouseEnter={() => setHighlightedIndex(index)}
+              className={cn(
+                "px-4 py-3 text-[13px] font-light cursor-pointer transition-colors border-b border-brand-text/5 last:border-0",
+                highlightedIndex === index ? "bg-brand-text/10 text-brand-text font-medium" : "text-brand-text hover:bg-brand-text/5"
+              )}
+            >
+              {state}
+            </li>
+          ))}
+        </ul>
+      )}
+      {error && <p className="text-error text-[10px] mt-2 px-2 uppercase tracking-widest">{error}</p>}
+    </div>
+  );
+}
 
 // --- Promo Code Component ---
 function PromoCodeForm() {
@@ -115,7 +239,7 @@ export function Cart() {
       <div className="container mx-auto px-4 md:px-8 pt-6 pb-16 md:py-16 max-w-[1400px]">
         <h1 className="text-3xl lg:text-5xl font-serif text-brand-text mb-6 md:mb-16">Shopping Bag</h1>
         
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-24">
           <div className="lg:col-span-7 xl:col-span-8">
             <div className="space-y-8">
               <>
@@ -310,7 +434,7 @@ export function Checkout() {
   if (totalPrice < shippingThreshold) {
     const stateStr = formData.state.toLowerCase().trim();
     const isWestBengal = stateStr === 'west bengal' || stateStr === 'wb';
-    const baseRate = isWestBengal ? 40 : 80;
+    const baseRate = isWestBengal ? 45 : 85;
     const calculatedWeight = Math.max(1, Math.ceil(totalWeight));
     shippingCost = calculatedWeight * baseRate;
   }
@@ -417,11 +541,11 @@ export function Checkout() {
           {/* Left Column: Form */}
           <div className="lg:col-span-7 xl:col-span-8 order-2 lg:order-1">
             
-            <form onSubmit={handleCheckout} className="space-y-16">
+            <form onSubmit={handleCheckout} className="space-y-10 lg:space-y-16">
               
               <section>
-                <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium text-brand-text mb-8">Contact Information</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium text-brand-text mb-6 md:mb-8">Contact Information</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
                   <div>
                     <input 
                       type="email" 
@@ -448,9 +572,9 @@ export function Checkout() {
               </section>
 
               <section>
-                <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium text-brand-text mb-8">Shipping Address</h2>
-                <div className="space-y-8">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <h2 className="text-[11px] uppercase tracking-[0.2em] font-medium text-brand-text mb-6 md:mb-8">Shipping Address</h2>
+                <div className="space-y-5 sm:space-y-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
                     <div>
                       <input 
                         type="text" 
@@ -487,7 +611,7 @@ export function Checkout() {
                     {errors.address && <p className="text-error text-[10px] mt-2 px-2 uppercase tracking-widest">{errors.address}</p>}
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-8">
                     <div className="sm:col-span-1">
                       <input 
                         type="text" 
@@ -500,15 +624,21 @@ export function Checkout() {
                       {errors.city && <p className="text-error text-[10px] mt-2 px-2 uppercase tracking-widest">{errors.city}</p>}
                     </div>
                     <div className="sm:col-span-1">
-                      <input 
-                        type="text" 
-                        name="state"
+                      <StateCombobox 
                         value={formData.state}
-                        onChange={handleChange}
-                        placeholder="State / Province *" 
+                        onChange={(val) => {
+                          setFormData(prev => ({ ...prev, state: val }));
+                          if (errors.state) {
+                            setErrors(prev => {
+                              const newErrs = { ...prev };
+                              delete newErrs.state;
+                              return newErrs;
+                            });
+                          }
+                        }}
+                        error={errors.state}
                         className={cn(inputClasses, errors.state && "border-error")}
                       />
-                      {errors.state && <p className="text-error text-[10px] mt-2 px-2 uppercase tracking-widest">{errors.state}</p>}
                     </div>
                     <div className="sm:col-span-1">
                       <input 
