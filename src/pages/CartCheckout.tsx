@@ -434,7 +434,7 @@ export function Checkout() {
   if (totalPrice < shippingThreshold) {
     const stateStr = formData.state.toLowerCase().trim();
     const isWestBengal = stateStr === 'west bengal' || stateStr === 'wb';
-    const baseRate = isWestBengal ? 45 : 85;
+    const baseRate = isWestBengal ? 49 : 85;
     const calculatedWeight = Math.max(1, Math.ceil(totalWeight));
     shippingCost = calculatedWeight * baseRate;
   }
